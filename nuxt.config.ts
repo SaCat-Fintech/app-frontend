@@ -5,4 +5,14 @@ export default defineNuxtConfig({
     transpile: ["primevue"],
   },
   devtools: { enabled: true },
+  modules: [
+    [
+      "@nuxtjs/google-fonts",
+      {
+        families: {
+          Inter: [300, 400, 500, 600, 700, 800],
+        },
+      },
+    ],
+  ],
 });
