@@ -10,7 +10,8 @@ export default defineNuxtConfig({
       "@nuxtjs/google-fonts",
       {
         families: {
-          Inter: [300, 400, 500, 600, 700, 800],
+          Roboto: true,
+          Inter: true,
         },
       },
     ],
