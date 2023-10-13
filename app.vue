@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import "@/assets/theme.css";
+import "@/assets/css/theme.css";
 </script>
