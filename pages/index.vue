@@ -1,6 +1,6 @@
 <template>
-  <section id="hero">
-    <div class="grid grid-cols-1 lg:grid-cols-2">
+  <section id="hero" class="h-[100vh]">
+    <div class="grid grid-cols-1 lg:grid-cols-2 mt-32 lg:mt-20">
       <div class="hidden lg:flex">
         <NuxtImg src="hero-img.png" />
       </div>
@@ -24,8 +24,8 @@
       </div>
     </div>
   </section>
-  <section id="benefits">
-    <div class="text-center flex flex-col">
+  <section id="benefits" class="h-[100vh]">
+    <div class="text-center flex flex-col mt-32 lg:mt-20">
       <h2 class="mx-6">Descubre los beneficios que tenemos</h2>
       <div class="grid grid-cols-1 lg:grid-cols-4 mt-14 mx-10">
         <div
@@ -41,7 +41,7 @@
           />
         </div>
         <NuxtImg
-          class="col-span-2 px-4 md:px-36 lg:px-10 xl:px-28 2xl:px-40 pb-10 lg:py-0"
+          class="col-span-2 px-4 md:px-36 lg:px-10 xl:px-16 2xl:px-40 pb-10 lg:py-0"
           src="hero-cat.png"
         />
         <div
