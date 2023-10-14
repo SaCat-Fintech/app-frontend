@@ -26,9 +26,11 @@
   </section>
   <section id="benefits">
     <div class="text-center flex flex-col">
-      <h2>Descubre los beneficios que tenemos</h2>
-      <div class="grid grid-cols-4 mt-14 mx-10">
-        <div class="grid grid-rows-2">
+      <h2 class="mx-6">Descubre los beneficios que tenemos</h2>
+      <div class="grid grid-cols-1 lg:grid-cols-4 mt-14 mx-10">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 lg:grid-rows-2"
+        >
           <HeroCard
             cardTitle="Tasa nomal o efectiva"
             cardText="Tú eliges que tipo de tasa deseas usar con total libertad."
@@ -38,8 +40,13 @@
             cardText="Puedes elegir entre soles o dólares para realizar tus operaciones sin complicación."
           />
         </div>
-        <NuxtImg class="col-span-2 px-10" src="hero-cat.png" />
-        <div class="grid grid-rows-2">
+        <NuxtImg
+          class="col-span-2 px-4 md:px-36 lg:px-10 xl:px-28 2xl:px-40 pb-10 lg:py-0"
+          src="hero-cat.png"
+        />
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 lg:grid-rows-2"
+        >
           <HeroCard
             cardTitle="Elige tu frecuencia de pago"
             cardText="Tienes opciones como Mensual, Bimestral, Trimestral, Semestral o Anual."
