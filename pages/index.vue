@@ -27,7 +27,7 @@
   <section id="benefits">
     <div class="text-center flex flex-col">
       <h2>Descubre los beneficios que tenemos</h2>
-      <div class="grid grid-cols-4 mt-14">
+      <div class="grid grid-cols-4 mt-14 mx-10">
         <div class="grid grid-rows-2">
           <HeroCard
             cardTitle="Tasa nomal o efectiva"
