@@ -8,6 +8,7 @@
   --text-color: rgba(0, 0, 0, 0.87);
   --text-color-secondary: rgba(0, 0, 0, 0.6);
   --primary-color: #05be50;
+  --alt-color: #1da750;
   --primary-color-text: #ffffff;
   --font-family: Inter, Roboto, Helvetica Neue Light, Helvetica Neue, Helvetica,
     Arial, Lucida Grande, sans-serif;
@@ -9326,4 +9327,8 @@ h4,
 h5,
 h6 {
   font-weight: 400;
+}
+h2 {
+  color: var(--alt-color);
+  font-size: 3rem;
 }
