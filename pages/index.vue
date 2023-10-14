@@ -5,10 +5,10 @@
         <NuxtImg src="hero-img.png" />
       </div>
       <div
-        class="text-center lg:text-end flex flex-col items-center lg:items-end mx-4 lg:mr-20 lg:ml-10"
+        class="text-center lg:text-end flex flex-col items-center lg:items-end mx-4 lg:mr-20 lg:pl-8"
       >
-        <h1 style="font-size: 4rem" class="mb-2">SaCat Fintech</h1>
-        <p style="font-size: 1.75rem">
+        <h1 style="font-size: 4rem" class="mb-3 xl:mt-6">SaCat Fintech</h1>
+        <p style="font-size: 1.75rem" class="max-w-[33rem]">
           El vehículo que siempre haz querido, a solo un préstamo. <br />Obtener
           un préstamo vehicular nunca fue tan fácil a comparación de SaCat
         </p>
@@ -20,12 +20,16 @@
             height: 0.0625rem;
           "
         />
-        <Button label="Adquirir ahora" />
+        <Button label="Adquirir ahora" @click="onSignIn" />
       </div>
     </div>
   </section>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const onSignIn = () => {
+  return navigateTo("/login");
+};
+</script>
 
 <style></style>
