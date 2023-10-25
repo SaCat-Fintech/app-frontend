@@ -1,33 +1,22 @@
 <template>
-  <div>
-    <h1>LOGIN</h1>
-    <h2>tester</h2>
-    <h3>tester</h3>
-    <p>tester p</p>
-    <div class="btns">
-      <Button label="Click" />
-      <Button severity="secondary" label="Click" />
+  <body class="flex justify-center items-center h-screen">
+    <div class="text-center flex flex-col">
+      <p class="text-xl sm:text-2xl mb-6">Inicia sesión con tu cuenta</p>
+      <Button
+        icon="pi pi-google"
+        iconPos="left"
+        severity="secondary"
+        class="w-72 sm:w-96 h-12 mb-4"
+        label="Inicia sesión con Google"
+      />
+      <p class="text-xl sm:text-2xl mb-6">o</p>
+      <InputText class="w-72 sm:w-96 h-12 mb-6" placeholder="Email" />
+      <InputText class="w-72 sm:w-96 h-12 mb-6" placeholder="Contraseña" />
+      <Button class="w-72 sm:w-96 h-12" label="Iniciar sesión" />
     </div>
-    <div>
-      <InputText type="text" v-model="value" />
-    </div>
-  </div>
+  </body>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
+<script lang="ts"></script>
 
-const value = ref(null);
-</script>
-
-<style>
-.btns {
-  display: flex;
-  flex-flow: column;
-  max-width: 10rem;
-}
-.p-button {
-  margin-top: 0.4rem;
-  margin-bottom: 0.4rem;
-}
-</style>
+<style></style>
