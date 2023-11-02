@@ -18,14 +18,21 @@
           label="Inicia sesión con Google"
         />
         <p class="text-xl sm:text-2xl mb-2">o</p>
-        <form submit="onSubmitForm" class="flex flex-col gap-6">
+        <form @submit.prevent="onSubmitForm" class="flex flex-col">
           <InputText
             id="email"
             v-model="email"
             class="w-72 sm:w-96 h-12"
             placeholder="Email"
+            required
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+            :class="{ 'p-invalid': emailInvalid }"
           />
-          <span class="p-input-icon-right">
+          <small v-if="emailInvalid" class="p-error text-left">
+            Formato inválido de correo
+          </small>
+
+          <span class="p-input-icon-right mt-6">
             <i
               class="pi"
               :class="{ 'pi-eye-slash': showPassword, 'pi-eye': !showPassword }"
@@ -37,13 +44,22 @@
               class="w-72 sm:w-96 h-12"
               placeholder="Contraseña"
               :type="showPassword ? 'text' : 'password'"
+              pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+              title="Password must contain at least 8 characters, one lowercase letter, one uppercase letter, and one number."
+              :class="{ 'p-invalid': passwordInvalid }"
             />
           </span>
-          <Button
-            @click="onSubmitForm"
-            class="w-72 sm:w-96 h-12"
-            label="Iniciar sesión"
-          />
+          <small v-if="passwordInvalid" class="p-error text-left">
+            Formato inválido de contraseña
+          </small>
+
+          <div class="mt-4">
+            <Button
+              @click="onSubmitForm"
+              class="w-72 sm:w-96 h-12"
+              label="Iniciar sesión"
+            />
+          </div>
         </form>
       </div>
     </div>
@@ -56,26 +72,32 @@ export default {
       email: "",
       password: "",
       showPassword: false,
+      emailInvalid: false,
+      passwordInvalid: false,
     };
   },
-  computed: {
+  computed: {},
+  methods: {
+    onSubmitForm() {
+      this.emailInvalid = !this.isValidEmail();
+      this.passwordInvalid = !this.isValidPassword();
+
+      if (this.isValidEmail() && this.isValidPassword()) {
+        // Form is valid, proceed with submission
+        console.log("Form is valid");
+        // You can submit the form data to your server or perform other actions here.
+      } else {
+        // Form is invalid, show error messages or prevent submission
+        console.log("Form is invalid");
+      }
+    },
     isValidEmail() {
-      // TODO: Prevent SQL injection
       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       return emailPattern.test(this.email);
     },
     isValidPassword() {
       const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
       return passwordPattern.test(this.password) && this.password.length >= 8;
-    },
-  },
-  methods: {
-    onSubmitForm() {
-      if (this.isValidEmail && this.isValidPassword) {
-        console.log("SUCCESS");
-      } else {
-        console.log("Not cool");
-      }
     },
   },
 };
