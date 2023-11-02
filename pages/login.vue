@@ -25,12 +25,20 @@
             class="w-72 sm:w-96 h-12"
             placeholder="Email"
           />
-          <InputText
-            id="password"
-            v-model="password"
-            class="w-72 sm:w-96 h-12"
-            placeholder="Contraseña"
-          />
+          <span class="p-input-icon-right">
+            <i
+              class="pi"
+              :class="{ 'pi-eye-slash': showPassword, 'pi-eye': !showPassword }"
+              @click="showPassword = !showPassword"
+            />
+            <InputText
+              id="password"
+              v-model="password"
+              class="w-72 sm:w-96 h-12"
+              placeholder="Contraseña"
+              :type="showPassword ? 'text' : 'password'"
+            />
+          </span>
           <Button
             @click="onSubmitForm"
             class="w-72 sm:w-96 h-12"
@@ -47,6 +55,7 @@ export default {
     return {
       email: "",
       password: "",
+      showPassword: false,
     };
   },
   computed: {
