@@ -9332,3 +9332,7 @@ h2 {
   color: var(--alt-color);
   font-size: 3rem;
 }
+h3 {
+  color: var(--alt-color);
+  font-weight: 600;
+}
