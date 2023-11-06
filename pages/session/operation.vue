@@ -27,6 +27,7 @@
             id="number-input"
             v-model="vehicleCost"
             class="h-10 mt-4 ml-4 w-20"
+            :max="2800000"
           />
         </div>
         <div class="flex flex-col">
@@ -136,8 +137,85 @@
           />
         </div>
       </div>
-
-      <div class="bg-green-200" id="col-3">03</div>
+      <div class="bg-yellow-200" id="col-3">
+        <div class="mt-6">12. Seleccionar plazo de gracia:</div>
+        <div class="card flex justify-content-center">
+          <Dropdown
+            v-model="gracePeriodType"
+            :options="gracePeriodTypes"
+            showClear
+            optionLabel="name"
+            class="h-10 mt-4 ml-4"
+          />
+        </div>
+        <div class="mt-6">
+          <!-- Fix grace period disable selection -->
+          13. Número de periodos de gracia:
+        </div>
+        <div class="card flex justify-content-center">
+          <Dropdown
+            v-model="gracePeriodNumber"
+            :options="gracePeriodNumbers"
+            showClear
+            optionLabel="name"
+            class="h-10 mt-4 ml-4"
+          />
+        </div>
+        <!-- TODO: Fix whatever nr. 14 is-->
+        <div class="col-span-1 flex flex-col items-center">
+          <div
+            class="w-9/12 rounded-xl text-center py-6 px-4 shadow-md my-6"
+            style="background: var(--light-200)"
+          >
+            <p>
+              Valor del vehículo:
+              <span style="color: var(--light-900)">
+                {{ formatCost(vehicleCost) }}
+              </span>
+            </p>
+            <div
+              class="text-center p-2 mx-6 my-6 rounded-3xl shadow-md"
+              style="background: var(--light-100)"
+            >
+              Cuotas
+            </div>
+            <div class="grid grid-cols-3 gap-x-4">
+              <div>
+                <OperationCard
+                  cardOutTitle="Inicial"
+                  :cardValue="vehicleCost"
+                  :cardPercentage="initialPaymentPercentage"
+                />
+              </div>
+              <div>
+                <OperationCard
+                  cardOutTitle="Financiación"
+                  :cardValue="vehicleCost"
+                  :cardPercentage="financingPercentage"
+                />
+              </div>
+              <div>
+                <OperationCard
+                  cardOutTitle="Final"
+                  :cardValue="vehicleCost"
+                  :cardPercentage="getFinalPercentage"
+                />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 mt-6 text-center">
+              <div>Plazos de gracia</div>
+              <div>
+                <span style="color: var(--light-900)"> 4 - 5 - 15 </span>
+              </div>
+            </div>
+          </div>
+          <Button
+            severity="secondary"
+            class="w-40 h-12 shadow-md"
+            label="Continuar"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -150,6 +228,7 @@ export default {
       vehicleCost: null,
       initialPaymentPercentage: null,
       financingPercentage: null,
+      finalPercentage: null,
       rateType: "effective",
       rateValue: null,
       capitalization: null,
@@ -157,6 +236,8 @@ export default {
       paymentFrequency: null,
       feesAmount: null,
       cok: null,
+      gracePeriodType: null,
+      gracePeriodNumber: null,
       capitalizations: [
         { name: "Anual" },
         { name: "Semestral" },
@@ -168,14 +249,40 @@ export default {
         { name: "Diario" },
       ],
       feesAmounts: [{ name: "24" }, { name: "36" }],
+      gracePeriodTypes: [
+        { name: "Total", value: "Total" },
+        { name: "Parcial", value: "Parcial" },
+        { name: "Ninguno", value: "Ninguno" },
+      ],
+      gracePeriodNumbers: [{ name: "1" }, { name: "2" }, { name: "3" }],
     };
   },
   computed: {
     isNominalRate() {
       return this.rateType === "nominal";
     },
+    getFinalPercentage() {
+      if (
+        this.initialPaymentPercentage !== null &&
+        this.financingPercentage !== null
+      ) {
+        return 100 - this.initialPaymentPercentage - this.financingPercentage;
+      }
+      return null;
+    },
+    // hasGracePeriodNone() {
+    //   return this.gracePeriodType === "Ninguno";
+    // },
   },
-  methods: {},
+  methods: {
+    formatCost(value: any) {
+      if (value === null) {
+        return "-";
+      } else {
+        return value.toLocaleString();
+      }
+    },
+  },
 };
 </script>
 
@@ -190,5 +297,8 @@ export default {
 }
 .p-dropdown-label {
   padding-top: 0.5rem;
+}
+.p-button {
+  border-radius: 1rem;
 }
 </style>

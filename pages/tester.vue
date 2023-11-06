@@ -12,6 +12,10 @@
       <InputText type="text" v-model="value" />
     </div>
   </div>
+  <HeroCard
+    cardTitle="Tasa nomal o efectiva"
+    cardText="Tú eliges que tipo de tasa deseas usar con total libertad."
+  />
 </template>
 
 <script setup lang="ts">
