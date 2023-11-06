@@ -27,9 +27,6 @@ export default {
       }
       return "-";
     },
-    // hasGracePeriodNone() {
-    //   return this.gracePeriodType === "Ninguno";
-    // },
   },
 };
 </script>
