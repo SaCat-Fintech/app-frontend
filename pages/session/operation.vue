@@ -72,7 +72,7 @@
         </div>
         <div class="card flex justify-content-center">
           <Dropdown
-            v-model="ratePeriod"
+            v-model="capitalization"
             :options="capitalizations"
             showClear
             optionLabel="name"
@@ -81,7 +81,62 @@
           />
         </div>
       </div>
-      <div class="bg-sky-200" id="col-2">02</div>
+      <div class="bg-sky-200" id="col-2">
+        <div class="mt-6">7. Seleccionar tiempo de la tasa:</div>
+        <div class="card flex justify-content-center">
+          <Dropdown
+            v-model="ratePeriod"
+            :options="capitalizations"
+            showClear
+            optionLabel="name"
+            class="h-10 mt-4 ml-4"
+          />
+        </div>
+        <div class="flex flex-col">
+          <div class="mt-6">8. Ingrese el valor de la tasa:</div>
+          <InputNumber
+            placeholder="ej. 1 - 99"
+            id="number-input"
+            v-model="rateValue"
+            suffix="%"
+            :min="1"
+            :max="99"
+            class="h-10 mt-4 ml-4 w-20"
+          />
+        </div>
+        <div class="mt-6">9. Seleccione frecuencia de pago:</div>
+        <div class="card flex justify-content-center">
+          <Dropdown
+            v-model="paymentFrequency"
+            :options="capitalizations"
+            showClear
+            optionLabel="name"
+            class="h-10 mt-4 ml-4"
+          />
+        </div>
+        <div class="mt-6">10. Cantidad de cuotas:</div>
+        <div class="card flex justify-content-center">
+          <Dropdown
+            v-model="feesAmount"
+            :options="feesAmounts"
+            showClear
+            optionLabel="name"
+            class="h-10 mt-4 ml-4"
+          />
+        </div>
+        <div class="flex flex-col">
+          <div class="mt-6">11. Ingresar el valor COK:</div>
+          <InputNumber
+            placeholder="ej. 1 - 99"
+            id="number-input"
+            v-model="cok"
+            :min="1"
+            :max="99"
+            class="h-10 mt-4 ml-4 w-20"
+          />
+        </div>
+      </div>
+
       <div class="bg-green-200" id="col-3">03</div>
     </div>
   </div>
@@ -96,17 +151,23 @@ export default {
       initialPaymentPercentage: null,
       financingPercentage: null,
       rateType: "effective",
+      rateValue: null,
+      capitalization: null,
       ratePeriod: null,
+      paymentFrequency: null,
+      feesAmount: null,
+      cok: null,
       capitalizations: [
-        { name: "ANUAL" },
-        { name: "SEMESTRAL" },
-        { name: "CUATRIMESTRAL" },
-        { name: "TRIMESTRAL" },
-        { name: "BIMESTRAL" },
-        { name: "MENSUAL" },
-        { name: "QUINCENAL" },
-        { name: "DIARIO" },
+        { name: "Anual" },
+        { name: "Semestral" },
+        { name: "Cuatrimestral" },
+        { name: "Trimestral" },
+        { name: "Bimestral" },
+        { name: "Mensual" },
+        { name: "Quincenal" },
+        { name: "Diario" },
       ],
+      feesAmounts: [{ name: "24" }, { name: "36" }],
     };
   },
   computed: {
