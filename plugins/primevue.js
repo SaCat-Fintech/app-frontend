@@ -9,6 +9,8 @@ import TabMenu from "primevue/tabmenu";
 import RadioButton from "primevue/radiobutton";
 import InputNumber from "primevue/inputnumber";
 import Dropdown from "primevue/dropdown";
+import Checkbox from "primevue/checkbox";
+import Textarea from "primevue/textarea";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -21,5 +23,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("RadioButton", RadioButton);
   nuxtApp.vueApp.component("InputNumber", InputNumber);
   nuxtApp.vueApp.component("Dropdown", Dropdown);
+  nuxtApp.vueApp.component("Checkbox", Checkbox);
+  nuxtApp.vueApp.component("Textarea", Textarea);
   //other components that you need
 });

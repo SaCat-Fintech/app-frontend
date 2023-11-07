@@ -3,12 +3,109 @@
     <nav>
       <Navbar />
     </nav>
-    <div class="flex justify-center items-center h-5/6">
-      <div class="text-center flex flex-col gap-4">TEMPLATE</div>
+    <div class="px-4 sm:px-10 md:px-20 xl:px-40 mt-10 lg:mt-24">
+      <p class="text-3xl">
+        Si usted presenta alguna duda puede usar estos canales de atención:
+      </p>
+      <form class="px-4: lg:px-20 xl:px-40" @submit="onSubmit">
+        <div
+          class="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-5 mt-10 lg:mt-32 gap-10 xl:gap-x-20"
+        >
+          <div class="lg:col-span-2">
+            <InputText
+              id="name"
+              v-model="name"
+              class="h-12 w-full shadow-md"
+              placeholder="Nombres y Apellidos"
+              required
+              pattern="[a-zA-Z]{1,100}"
+              :class="{ 'p-invalid': nameInvalid }"
+            />
+            <InputText
+              id="email"
+              v-model="email"
+              class="w-full h-12 mt-6 shadow-md"
+              placeholder="Email"
+              required
+              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+              :class="{ 'p-invalid': emailInvalid }"
+            />
+            <small v-if="emailInvalid" class="p-error text-left">
+              Formato inválido de correo
+            </small>
+            <InputMask
+              id="basic"
+              v-model="phone"
+              class="w-full h-12 mt-6 shadow-md"
+              mask="99-999999999"
+              placeholder="Número de Teléfono"
+            />
+            <div class="flex align-items-center mt-6">
+              <!-- TODO: Fix the size of this checkbox -->
+              <Checkbox
+                v-model="terms"
+                inputId="terms"
+                name="terms"
+                :binary="true"
+                class="mr-4"
+              />
+              <small
+                >Estoy de acuerdo con qué me manden información a mi número y
+                correo</small
+              >
+            </div>
+          </div>
+          <div class="lg:col-span-3">
+            <Textarea
+              v-model="text"
+              placeholder="Escriba aquí..."
+              class="w-full h-48 shadow-md"
+            />
+            <div class="flex justify-end mt-4">
+              <Button @click="onSubmit" class="h-12 w-40" label="Enviar" />
+            </div>
+          </div>
+        </div>
+        <p class="text-end mt-20">
+          <span class="font-bold">Teléfono: </span>900 000 000
+        </p>
+      </form>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script lang="ts">
+export default {
+  data() {
+    return {
+      name: "",
+      nameInvalid: false,
+      email: "",
+      phone: "",
+      text: "",
+      emailInvalid: false,
+      terms: false,
+    };
+  },
+  methods: {
+    onSubmit() {
+      console.log("test");
+    },
+    isValidEmail() {
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      return emailPattern.test(this.email);
+    },
+  },
+};
+</script>
 
-<style></style>
+<style>
+.p-inputtext {
+  border-radius: 1rem;
+  border-width: 0rem;
+  background-color: #e3f9eb;
+}
+.p-button {
+  border-radius: 1rem;
+}
+</style>
