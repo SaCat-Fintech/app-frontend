@@ -62,6 +62,7 @@
               class="w-full h-48 shadow-md"
             />
             <div class="flex justify-end mt-4">
+              <Toast />
               <Button @click="onSubmit" class="h-12 w-40" label="Enviar" />
             </div>
           </div>
@@ -75,25 +76,52 @@
 </template>
 
 <script lang="ts">
+import { useToast } from "primevue/usetoast";
+
 export default {
   data() {
     return {
       name: "",
-      nameInvalid: false,
       email: "",
       phone: "",
       text: "",
+      nameInvalid: false,
       emailInvalid: false,
+      textInvalid: false,
       terms: false,
     };
   },
   methods: {
     onSubmit() {
-      console.log("test");
+      const toast = useToast();
+      this.nameInvalid = !this.isValidName(this.name);
+      this.emailInvalid = !this.isValidEmail();
+      this.textInvalid = !this.isValidText();
+
+      if (
+        this.isValidName(this.name) &&
+        this.isValidEmail() &&
+        this.isValidText()
+      ) {
+        console.log("test");
+      } else {
+        toast.add({
+          severity: "warn",
+          summary: "Warn Message",
+          detail: "Message Content",
+          life: 3000,
+        });
+      }
     },
     isValidEmail() {
       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       return emailPattern.test(this.email);
+    },
+    isValidName(nameValue: string) {
+      return /^[a-zA-Z]{1,100}$/.test(nameValue);
+    },
+    isValidText() {
+      return /^[a-zA-Z0-9]{1,500}$/.test(this.text);
     },
   },
 };

@@ -11,6 +11,7 @@ import InputNumber from "primevue/inputnumber";
 import Dropdown from "primevue/dropdown";
 import Checkbox from "primevue/checkbox";
 import Textarea from "primevue/textarea";
+import Toast from "primevue/toast";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -25,5 +26,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Dropdown", Dropdown);
   nuxtApp.vueApp.component("Checkbox", Checkbox);
   nuxtApp.vueApp.component("Textarea", Textarea);
+  nuxtApp.vueApp.component("Toast", Toast);
   //other components that you need
 });
