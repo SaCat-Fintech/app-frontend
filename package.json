@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@nuxt/image": "1.0.0-rc.3",
+    "csv-stringify": "^6.4.4",
+    "papaparse": "^5.4.1",
     "primeicons": "^6.0.1",
     "primevue": "^3.35.0",
     "vee-validate": "^3.4.15"

@@ -12,6 +12,10 @@ import Dropdown from "primevue/dropdown";
 import Checkbox from "primevue/checkbox";
 import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import ColumnGroup from "primevue/columngroup";
+import Row from "primevue/row";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -27,5 +31,9 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Checkbox", Checkbox);
   nuxtApp.vueApp.component("Textarea", Textarea);
   nuxtApp.vueApp.component("Toast", Toast);
+  nuxtApp.vueApp.component("DataTable", DataTable);
+  nuxtApp.vueApp.component("Column", Column);
+  nuxtApp.vueApp.component("ColumnGroup", ColumnGroup);
+  nuxtApp.vueApp.component("Row", Row);
   //other components that you need
 });
