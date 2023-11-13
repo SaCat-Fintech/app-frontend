@@ -3,8 +3,8 @@
     <nav>
       <Navbar />
     </nav>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-12 px-4 md:px-20 mt-8">
-      <div class="bg-red-200" id="col-1">
+    <div class="grid grid-cols-1 lg:grid-cols-3 px-4 sm:px-20 lg:px-32 mt-16">
+      <div class="lg:pl-10" id="col-1">
         <div>1. Seleccionar moneda:</div>
         <div class="flex flex-wrap gap-x-6 mt-4 ml-4">
           <div class="flex align-items-center">
@@ -59,7 +59,7 @@
         </div>
         <div class="mt-6">5. Seleccionar tipo de tasa:</div>
         <div class="flex flex-wrap gap-x-6 mt-4 ml-4">
-          <div class="flex align-items-center">
+          <div class="flex align-items-center" @change="handleRateTypeChange">
             <RadioButton v-model="rateType" inputId="rate1" value="effective" />
             <label for="rate1" class="ml-2">Efectiva</label>
           </div>
@@ -82,7 +82,7 @@
           />
         </div>
       </div>
-      <div class="bg-sky-200" id="col-2">
+      <div class="lg:pl-10" id="col-2">
         <div>7. Seleccionar tiempo de la tasa:</div>
         <div class="card flex justify-content-center">
           <Dropdown
@@ -123,6 +123,7 @@
             showClear
             optionLabel="name"
             class="h-10 mt-4 ml-4"
+            @change="handleFeesAmountChange"
           />
         </div>
         <div class="flex flex-col">
@@ -148,7 +149,7 @@
           />
         </div>
       </div>
-      <div class="bg-yellow-200" id="col-3">
+      <div id="col-3">
         <div
           :style="{
             opacity:
@@ -169,8 +170,9 @@
             showClear
             optionLabel="name"
             class="h-10 mt-4 ml-4"
+            @change="handleGracePeriodNumberChange"
             :disabled="
-              gracePeriodType &&
+              gracePeriodType! &&
               gracePeriodType.name !== 'Parcial' &&
               gracePeriodType.name !== 'Total'
             "
@@ -187,7 +189,6 @@
                 : '1',
           }"
         >
-          <!-- Fix grace period disable selection -->
           14. Número de la cuota:
         </div>
         <div class="grid grid-rows-3">
@@ -213,7 +214,7 @@
               :max="getMaxFeeValue"
               class="h-10 w-20"
               :disabled="
-                gracePeriodType &&
+                gracePeriodType! &&
                 gracePeriodType.name !== 'Parcial' &&
                 gracePeriodType.name !== 'Total'
               "
@@ -241,9 +242,10 @@
               :max="getMaxFeeValue"
               class="h-10 w-20"
               :disabled="
-                gracePeriodType &&
-                gracePeriodType.name !== 'Parcial' &&
-                gracePeriodType.name !== 'Total'
+                (gracePeriodType! &&
+                  gracePeriodType.name !== 'Parcial' &&
+                  gracePeriodType.name !== 'Total') ||
+                (gracePeriodNumber && gracePeriodNumber.value < 2)
               "
             />
           </div>
@@ -269,19 +271,20 @@
               :max="getMaxFeeValue"
               class="h-10 w-20"
               :disabled="
-                gracePeriodType &&
-                gracePeriodType.name !== 'Parcial' &&
-                gracePeriodType.name !== 'Total'
+                (gracePeriodType! &&
+                  gracePeriodType.name !== 'Parcial' &&
+                  gracePeriodType.name !== 'Total') ||
+                (gracePeriodNumber && gracePeriodNumber.value < 3)
               "
             />
           </div>
         </div>
-        <div class="col-span-1 flex flex-col items-center">
+        <div class="col-span-1 flex flex-col">
           <div
-            class="w-9/12 rounded-xl text-center py-6 px-4 shadow-md my-6"
+            class="rounded-xl py-6 px-4 mx-8 shadow-md my-6"
             style="background: var(--light-200)"
           >
-            <p>
+            <p class="text-center">
               Valor del vehículo:
               <span style="color: var(--light-900)">
                 {{ formatCost(vehicleCost) }}
@@ -325,11 +328,13 @@
               </div>
             </div>
           </div>
-          <Button
-            severity="secondary"
-            class="w-40 h-12 shadow-md"
-            label="Continuar"
-          />
+          <div class="text-center">
+            <Button
+              severity="secondary"
+              class="w-40 h-12 shadow-md"
+              label="Continuar"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -373,7 +378,11 @@ export default {
         { name: "Parcial", value: "Parcial" },
         { name: "Ninguno", value: "Ninguno" },
       ],
-      gracePeriodNumbers: [{ name: "1" }, { name: "2" }, { name: "3" }],
+      gracePeriodNumbers: [
+        { name: "1", value: 1 },
+        { name: "2", value: 2 },
+        { name: "3", value: 3 },
+      ],
     };
   },
   computed: {
@@ -436,6 +445,20 @@ export default {
         return value.toLocaleString();
       }
     },
+    handleRateTypeChange() {
+      if (this.rateType) {
+        if (this.rateType === "effective") {
+          this.capitalization = null;
+        }
+      } else {
+        this.capitalization = null;
+      }
+    },
+    handleFeesAmountChange() {
+      this.firstFee = null;
+      this.secondFee = null;
+      this.thirdFee = null;
+    },
     handleGracePeriodChange() {
       if (
         this.gracePeriodType &&
@@ -448,9 +471,24 @@ export default {
         this.thirdFee = null;
       }
     },
+    handleGracePeriodNumberChange() {
+      if (this.gracePeriodNumber) {
+        if (this.gracePeriodNumber.value < 3) {
+          this.thirdFee = null;
+        }
+        if (this.gracePeriodNumber.value < 2) {
+          this.secondFee = null;
+        }
+      } else {
+        this.firstFee = null;
+        this.secondFee = null;
+        this.thirdFee = null;
+      }
+    },
   },
   watch: {
     gracePeriodType: "handleGracePeriodChange",
+    rateType: "handleRateTypeChange",
   },
 };
 </script>
