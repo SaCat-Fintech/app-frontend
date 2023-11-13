@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="bg-sky-200" id="col-2">
-        <div class="mt-6">7. Seleccionar tiempo de la tasa:</div>
+        <div>7. Seleccionar tiempo de la tasa:</div>
         <div class="card flex justify-content-center">
           <Dropdown
             v-model="ratePeriod"
@@ -136,8 +136,6 @@
             class="h-10 mt-4 ml-4 w-20"
           />
         </div>
-      </div>
-      <div class="bg-yellow-200" id="col-3">
         <div class="mt-6">12. Seleccionar plazo de gracia:</div>
         <div class="card flex justify-content-center">
           <Dropdown
@@ -148,7 +146,18 @@
             class="h-10 mt-4 ml-4"
           />
         </div>
-        <div class="mt-6">
+      </div>
+      <div class="bg-yellow-200" id="col-3">
+        <div
+          :style="{
+            opacity:
+              gracePeriodType &&
+              gracePeriodType.name !== 'Parcial' &&
+              gracePeriodType.name !== 'Total'
+                ? '0.3'
+                : '1',
+          }"
+        >
           <!-- Fix grace period disable selection -->
           13. Número de periodos de gracia:
         </div>
@@ -159,9 +168,113 @@
             showClear
             optionLabel="name"
             class="h-10 mt-4 ml-4"
+            :disabled="
+              gracePeriodType &&
+              gracePeriodType.name !== 'Parcial' &&
+              gracePeriodType.name !== 'Total'
+            "
           />
         </div>
-        <!-- TODO: Fix whatever nr. 14 is-->
+        <div
+          class="mt-6"
+          :style="{
+            opacity:
+              gracePeriodType &&
+              gracePeriodType.name !== 'Parcial' &&
+              gracePeriodType.name !== 'Total'
+                ? '0.3'
+                : '1',
+          }"
+        >
+          <!-- Fix grace period disable selection -->
+          14. Número de la cuota:
+        </div>
+        <div class="grid grid-rows-3">
+          <div class="period-div grid grid-cols-2 mt-2">
+            <div
+              class="text-right pr-6 mt-2"
+              :style="{
+                opacity:
+                  gracePeriodType &&
+                  gracePeriodType.name !== 'Parcial' &&
+                  gracePeriodType.name !== 'Total'
+                    ? '0.3'
+                    : '1',
+              }"
+            >
+              1er periodo :
+            </div>
+            <InputNumber
+              :placeholder="getMaxFeePlaceholder"
+              id="number-input"
+              v-model="firstFee"
+              :min="1"
+              :max="getMaxFeeValue"
+              class="h-10 w-20"
+              :disabled="
+                gracePeriodType &&
+                gracePeriodType.name !== 'Parcial' &&
+                gracePeriodType.name !== 'Total'
+              "
+            />
+          </div>
+          <div class="period-div grid grid-cols-2 mt-2">
+            <div
+              class="text-right pr-6 mt-2"
+              :style="{
+                opacity:
+                  gracePeriodType &&
+                  gracePeriodType.name !== 'Parcial' &&
+                  gracePeriodType.name !== 'Total'
+                    ? '0.3'
+                    : '1',
+              }"
+            >
+              2do periodo :
+            </div>
+            <InputNumber
+              :placeholder="getMaxFeePlaceholder"
+              id="number-input"
+              v-model="secondFee"
+              :min="1"
+              :max="getMaxFeeValue"
+              class="h-10 w-20"
+              :disabled="
+                gracePeriodType &&
+                gracePeriodType.name !== 'Parcial' &&
+                gracePeriodType.name !== 'Total'
+              "
+            />
+          </div>
+          <div class="period-div grid grid-cols-2 mt-2">
+            <div
+              class="text-right pr-6 mt-2"
+              :style="{
+                opacity:
+                  gracePeriodType &&
+                  gracePeriodType.name !== 'Parcial' &&
+                  gracePeriodType.name !== 'Total'
+                    ? '0.3'
+                    : '1',
+              }"
+            >
+              3er periodo :
+            </div>
+            <InputNumber
+              :placeholder="getMaxFeePlaceholder"
+              id="number-input"
+              v-model="thirdFee"
+              :min="1"
+              :max="getMaxFeeValue"
+              class="h-10 w-20"
+              :disabled="
+                gracePeriodType &&
+                gracePeriodType.name !== 'Parcial' &&
+                gracePeriodType.name !== 'Total'
+              "
+            />
+          </div>
+        </div>
         <div class="col-span-1 flex flex-col items-center">
           <div
             class="w-9/12 rounded-xl text-center py-6 px-4 shadow-md my-6"
@@ -183,22 +296,22 @@
               <div>
                 <OperationCard
                   cardOutTitle="Inicial"
-                  :cardValue="vehicleCost"
-                  :cardPercentage="initialPaymentPercentage"
+                  :cardValue="vehicleCost!"
+                  :cardPercentage="initialPaymentPercentage!"
                 />
               </div>
               <div>
                 <OperationCard
                   cardOutTitle="Financiación"
-                  :cardValue="vehicleCost"
-                  :cardPercentage="financingPercentage"
+                  :cardValue="vehicleCost!"
+                  :cardPercentage="financingPercentage!"
                 />
               </div>
               <div>
                 <OperationCard
                   cardOutTitle="Final"
-                  :cardValue="vehicleCost"
-                  :cardPercentage="getFinalPercentage"
+                  :cardValue="vehicleCost!"
+                  :cardPercentage="getFinalPercentage!"
                 />
               </div>
             </div>
@@ -238,6 +351,9 @@ export default {
       cok: null,
       gracePeriodType: null,
       gracePeriodNumber: null,
+      firstFee: null,
+      secondFee: null,
+      thirdFee: null,
       capitalizations: [
         { name: "Anual" },
         { name: "Semestral" },
@@ -261,12 +377,33 @@ export default {
     isNominalRate() {
       return this.rateType === "nominal";
     },
+    getMaxFeeValue() {
+      if (this.feesAmount !== null) {
+        if (this.feesAmount.name === "24") {
+          return 23;
+        }
+      }
+      return 35;
+    },
+    getMaxFeePlaceholder() {
+      let init = "1 - ";
+      if (this.feesAmount !== null) {
+        if (this.feesAmount.name === "24") {
+          return init + "23";
+        }
+      }
+      return init + "35";
+    },
     getFinalPercentage() {
       if (
         this.initialPaymentPercentage !== null &&
         this.financingPercentage !== null
       ) {
-        return 100 - this.initialPaymentPercentage - this.financingPercentage;
+        return (
+          100 -
+          this.initialPaymentPercentage -
+          this.financingPercentage
+        ).toString();
       }
       return null;
     },
@@ -300,5 +437,12 @@ export default {
 }
 .p-button {
   border-radius: 1rem;
+}
+
+.period-div {
+  .p-inputtext {
+    border-radius: 1rem;
+    width: 6rem;
+  }
 }
 </style>
