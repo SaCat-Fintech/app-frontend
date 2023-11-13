@@ -144,6 +144,7 @@
             showClear
             optionLabel="name"
             class="h-10 mt-4 ml-4"
+            @change="handleGracePeriodChange"
           />
         </div>
       </div>
@@ -318,7 +319,9 @@
             <div class="grid grid-cols-2 mt-6 text-center">
               <div>Plazos de gracia</div>
               <div>
-                <span style="color: var(--light-900)"> 4 - 5 - 15 </span>
+                <span style="color: var(--light-900)">
+                  {{ showFeesAvailable }}
+                </span>
               </div>
             </div>
           </div>
@@ -407,9 +410,23 @@ export default {
       }
       return null;
     },
-    // hasGracePeriodNone() {
-    //   return this.gracePeriodType === "Ninguno";
-    // },
+    showFeesAvailable() {
+      if (this.firstFee && this.secondFee && this.thirdFee) {
+        return this.firstFee + " - " + this.secondFee + " - " + this.thirdFee;
+      } else if (this.firstFee && this.secondFee) {
+        return this.firstFee + " - " + this.secondFee;
+      } else if (this.firstFee && this.thirdFee) {
+        return this.firstFee + " - " + this.thirdFee;
+      } else if (this.secondFee && this.thirdFee) {
+        return this.secondFee + " - " + this.thirdFee;
+      } else if (this.firstFee) {
+        return this.firstFee;
+      } else if (this.secondFee) {
+        return this.secondFee;
+      } else if (this.thirdFee) {
+        return this.thirdFee;
+      }
+    },
   },
   methods: {
     formatCost(value: any) {
@@ -419,6 +436,21 @@ export default {
         return value.toLocaleString();
       }
     },
+    handleGracePeriodChange() {
+      if (
+        this.gracePeriodType &&
+        this.gracePeriodType.name !== "Parcial" &&
+        this.gracePeriodType.name !== "Total"
+      ) {
+        this.gracePeriodNumber = null;
+        this.firstFee = null;
+        this.secondFee = null;
+        this.thirdFee = null;
+      }
+    },
+  },
+  watch: {
+    gracePeriodType: "handleGracePeriodChange",
   },
 };
 </script>
@@ -442,7 +474,7 @@ export default {
 .period-div {
   .p-inputtext {
     border-radius: 1rem;
-    width: 6rem;
+    width: 5rem;
   }
 }
 </style>
