@@ -11,47 +11,105 @@
         <DataTable
           :value="operations"
           showGridlines
+          scrollable
+          scrollHeight="36rem"
           tableStyle="min-width: 50rem"
           paginator
           :rows="5"
           :rowsPerPageOptions="[5, 10, 20, 50]"
         >
           <template #paginatorend>
-            <Button label="Descargar CSV" @click="exportCSV($event)" />
+            <Button
+              label="Descargar CSV"
+              @click="exportCSV($event)"
+              style="
+                background-color: var(--light-700);
+                color: black;
+                border-radius: 1.25rem;
+                padding-inline: 1.8rem;
+                box-shadow: 0.5rem;
+              "
+            />
           </template>
-          <Column field="id" header="Código">
+          <Column
+            field="id"
+            header="Código"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
             <template #body="slotProps">
               {{ formatCode(slotProps.data.id) }}
             </template>
           </Column>
-          <Column field="created_at" header="Fecha">
+          <Column
+            field="created_at"
+            header="Fecha"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
             <template #body="slotProps">
               {{ formatDate(slotProps.data.created_at) }}
             </template>
           </Column>
-          <Column field="vehicle_cost" header="Valor">
+          <Column
+            field="vehicle_cost"
+            header="Valor"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
             <template #body="slotProps">
-              {{ slotProps.data.vehicle_cost.toLocaleString() }}
+              {{
+                slotProps.data.vehicle_cost
+                  .toFixed(2)
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }}
             </template>
           </Column>
-          <Column field="currency" header="Tipo de Moneda">
+          <Column
+            field="currency"
+            header="Tipo de Moneda"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
             <template #body="slotProps">
               {{ slotProps.data.currency === "dollar" ? "Dólar" : "Sol" }}
             </template>
           </Column>
-          <Column field="rate_value" header="Tasa">
+          <Column
+            field="rate_value"
+            header="Tasa"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
             <template #body="slotProps">
               {{ slotProps.data.rate_value }}%
             </template>
           </Column>
-          <Column field="rate_type" header="Tipo de Tasa">
+          <Column
+            field="rate_type"
+            header="Tipo de Tasa"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
             <template #body="slotProps">
               {{
                 slotProps.data.rate_type === "nominal" ? "Nominal" : "Efectiva"
               }}
             </template>
           </Column>
-          <Column field="rate_period" header="Tiempo">
+          <Column
+            field="rate_period"
+            header="Tiempo"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
             <template #body="slotProps">
               {{
                 periods.find((cap) => cap.value === slotProps.data.rate_period)
@@ -59,7 +117,13 @@
               }}
             </template>
           </Column>
-          <Column field="payment_frequency" header="Pago">
+          <Column
+            field="payment_frequency"
+            header="Pago"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
             <template #body="slotProps">
               {{
                 periods.find(
@@ -68,7 +132,14 @@
               }}
             </template>
           </Column>
-          <Column :exportable="false" style="min-width: 8rem" header="Detalles">
+          <Column
+            :exportable="false"
+            style="min-width: 4rem; text-align: center"
+            header="Detalles"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
             <template #body="slotProps">
               <Button icon="pi pi-eye" text rounded aria-label="Details" />
             </template>
@@ -109,7 +180,7 @@ const operations = ref([
   {
     id: "550e8400-e29b-41d4-a716-446655440000",
     created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 6000.0,
+    vehicle_cost: 60090.294,
     currency: "dollar",
     rate_value: 5.6,
     rate_type: "nominal",
@@ -130,6 +201,106 @@ const operations = ref([
     id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 8000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
+    currency: "dollar",
+    rate_value: 5.6,
+    rate_type: "nominal",
+    rate_period: "anual",
+    payment_frequency: "mensual",
+  },
+  {
+    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    created_at: "1999-01-08 04:05:06",
+    vehicle_cost: 9000.0,
     currency: "dollar",
     rate_value: 5.6,
     rate_type: "nominal",

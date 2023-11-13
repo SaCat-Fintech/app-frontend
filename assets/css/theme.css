@@ -9,9 +9,10 @@
   --text-color-secondary: rgba(0, 0, 0, 0.6);
   --primary-color: #05be50;
   --alt-color: #1da750;
-  --light-100: #E3F9EB;
-  --light-200: #CAF1D8;
-  --light-900: #136C34;
+  --light-100: #e3f9eb;
+  --light-200: #caf1d8;
+  --light-700: #76db9b;
+  --light-900: #136c34;
   --primary-color-text: #ffffff;
   --font-family: Inter, Roboto, Helvetica Neue Light, Helvetica Neue, Helvetica,
     Arial, Lucida Grande, sans-serif;
