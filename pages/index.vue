@@ -1,5 +1,5 @@
 <template>
-  <section id="hero" class="h-[100vh]">
+  <section id="hero" class="h-screen">
     <div class="grid grid-cols-1 lg:grid-cols-2 mt-32 lg:mt-20">
       <div class="hidden lg:flex">
         <NuxtImg src="hero-img.png" />
@@ -24,7 +24,7 @@
       </div>
     </div>
   </section>
-  <section id="benefits" class="h-[100vh]">
+  <section id="benefits" class="mb-40 sm:mb-60 lg:mb-0 lg:h-screen">
     <div class="text-center flex flex-col mt-32 lg:mt-20">
       <h2 class="mx-6">Descubre los beneficios que tenemos</h2>
       <div class="grid grid-cols-1 lg:grid-cols-4 mt-14 mx-10">
@@ -59,12 +59,113 @@
       </div>
     </div>
   </section>
+  <section id="info" class="mb-40 sm:mb-60 lg:mb-0 lg:h-screen">
+    <div class="text-center">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-10">
+        <div
+          class="text-3xl flex items-center justify-center px-12 py-20"
+          style="background: var(--light-700)"
+        >
+          100% digital
+        </div>
+        <div
+          class="text-xl flex items-center justify-center px-12 py-20"
+          style="border-color: var(--light-700); border-width: 2px"
+        >
+          Ya no tienes que ir al banco para solicitar el Préstamo Efectivo que
+          necesitas, hazlo desde donde estés.
+        </div>
+        <div
+          class="text-3xl flex items-center justify-center px-12 py-20"
+          style="background: var(--light-200)"
+        >
+          Personaliza tu préstamo
+        </div>
+        <div
+          class="text-xl flex items-center justify-center px-12 py-20"
+          style="border-color: var(--light-200); border-width: 2px"
+        >
+          Pide el monto y las cuotas que necesites.
+        </div>
+      </div>
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-10 mt-6"
+      >
+        <div
+          class="text-xl flex items-center justify-center px-12 py-20"
+          style="border-color: var(--light-200); border-width: 2px"
+        >
+          Puedes elegir entre 24 o 26 meses
+        </div>
+        <div
+          class="text-3xl flex items-center justify-center px-12 py-20"
+          style="background: var(--light-200)"
+        >
+          Elige tus cuotas
+        </div>
+        <div
+          class="text-xl flex items-center justify-center px-12 py-20"
+          style="border-color: var(--light-700); border-width: 2px"
+        >
+          Al instante y sin pagar comisiones. Si no tienes una cuenta, te
+          creamos una sin costo y con tarjeta digital.
+        </div>
+        <div
+          class="text-3xl flex items-center justify-center px-12 py-20"
+          style="background: var(--light-700)"
+        >
+          Recíbelo en tu cuenta
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="questions" class="lg:h-screen">
+    <div class="flex justify-center items-center h-5/6">
+      <div class="text-center flex flex-col">
+        <h2 class="text-center px-4">Preguntas frecuentes</h2>
+        <Accordion
+          :activeIndex="0"
+          class="w-screen sm:w-[40rem] lg:w-[60rem] mt-14 text-left"
+        >
+          <AccordionTab
+            v-for="tab in tabs"
+            :key="tab.title"
+            :header="tab.title"
+          >
+            <p class="m-0">{{ tab.content }}</p>
+          </AccordionTab>
+        </Accordion>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
 const onClickLogin = () => {
   return navigateTo("/login");
 };
+const tabs = ref([
+  {
+    title: "¿Cómo solicitar un préstamo online?",
+    content:
+      "Lorem ipsum dolor sit amet consectetur. Nisi vel venenatis id a arcu lectus lorem felis. Ipsum amet laoreeteleifend fermentum aliquet amet elementum facilisi ut. Ut convallis semper fames ultricies neque nunc.Et magna adipiscing adipiscing viverra vestibulum.",
+  },
+  {
+    title: "¿Qué necesito para solicitar un préstamo online?",
+    content:
+      "Lorem ipsum dolor sit amet consectetur. Nisi vel venenatis id a arcu lectus lorem felis. Ipsum amet laoreeteleifend fermentum aliquet amet elementum facilisi ut. Ut convallis semper fames ultricies neque nunc.Et magna adipiscing adipiscing viverra vestibulum.",
+  },
+  {
+    title: "¿Puedo personalizar mi préstamo online?",
+    content:
+      "Lorem ipsum dolor sit amet consectetur. Nisi vel venenatis id a arcu lectus lorem felis. Ipsum amet laoreeteleifend fermentum aliquet amet elementum facilisi ut. Ut convallis semper fames ultricies neque nunc.Et magna adipiscing adipiscing viverra vestibulum.",
+  },
+  {
+    title: "¿En cuánto tiempo recibiré el préstamo?",
+    content:
+      "Lorem ipsum dolor sit amet consectetur. Nisi vel venenatis id a arcu lectus lorem felis. Ipsum amet laoreeteleifend fermentum aliquet amet elementum facilisi ut. Ut convallis semper fames ultricies neque nunc.Et magna adipiscing adipiscing viverra vestibulum.",
+  },
+]);
 </script>
 
 <style></style>

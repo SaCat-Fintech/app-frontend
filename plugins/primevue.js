@@ -16,6 +16,8 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup";
 import Row from "primevue/row";
+import Accordion from "primevue/accordion";
+import AccordionTab from "primevue/accordiontab";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -35,5 +37,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Column", Column);
   nuxtApp.vueApp.component("ColumnGroup", ColumnGroup);
   nuxtApp.vueApp.component("Row", Row);
+  nuxtApp.vueApp.component("Accordion", Accordion);
+  nuxtApp.vueApp.component("AccordionTab", AccordionTab);
   //other components that you need
 });
