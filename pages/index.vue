@@ -138,9 +138,186 @@
       </div>
     </div>
   </section>
+
+  <footer style="background-color: var(--light-700)">
+    <form class="px-4 md:px-20 xl:px-52 pb-20" @submit="onSubmit">
+      <div
+        class="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-5 mt-10 lg:mt-32 gap-10 xl:gap-x-20 pt-16"
+      >
+        <div class="lg:col-span-2">
+          <InputText
+            id="name"
+            v-model="name"
+            class="h-12 w-full shadow-md"
+            placeholder="Nombres y Apellidos"
+            required
+            pattern="[a-zA-Z]{1,100}"
+            :class="{ 'p-invalid': nameInvalid }"
+          />
+          <small v-if="nameInvalid" class="p-error text-left">
+            Formato inválido de nombre.
+          </small>
+          <InputText
+            id="email"
+            v-model="email"
+            class="w-full h-12 mt-6 shadow-md"
+            placeholder="Email"
+            required
+            :class="{ 'p-invalid': emailInvalid }"
+          />
+          <small v-if="emailInvalid" class="p-error text-left">
+            Formato inválido de correo.
+          </small>
+          <InputMask
+            id="basic"
+            v-model="phone"
+            class="w-full h-12 mt-6 shadow-md"
+            mask="99-999999999"
+            placeholder="Número de Teléfono"
+            :class="{ 'p-invalid': phoneInvalid }"
+          />
+          <small v-if="nameInvalid" class="p-error text-left">
+            Formato inválido de número telefónico.
+          </small>
+          <div class="flex align-items-center mt-6">
+            <Checkbox
+              v-model="terms"
+              inputId="terms"
+              name="terms"
+              :binary="true"
+              class="mr-4"
+            />
+            <div class="flex flex-col">
+              <small
+                >Estoy de acuerdo con qué me manden información a mi número y
+                correo</small
+              >
+              <small v-if="!terms" class="p-error text-left">
+                Debe aceptar los términos.
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-3">
+          <Textarea
+            v-model="text"
+            placeholder="Escriba aquí..."
+            class="w-full h-48 shadow-md"
+            :class="{ 'p-invalid': textInvalid }"
+          />
+          <div class="flex flex-col">
+            <small class="mr-2">Palabras: {{ textWordCount }}</small>
+            <small v-if="textInvalid" class="p-error text-left">
+              Debe agregar un mensaje de 20 a 200 palabras.
+            </small>
+          </div>
+          <div class="flex justify-end mt-4">
+            <Button @click="onSubmit" class="h-12 w-40" label="Enviar" />
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-left text-xl mt-20 grid grid-cols-1 lg:grid-cols-3 gap-y-4 gap-x-48"
+      >
+        <p>
+          <span class="font-bold">Dirección: </span>Av Lorem ipsum dolor sit
+          amet
+        </p>
+        <p><span class="font-bold">Correo electrónico: </span>sacat@mail.com</p>
+        <p><span class="font-bold">Teléfono: </span>900 000 000</p>
+      </div>
+    </form>
+  </footer>
 </template>
 
 <script setup lang="ts">
+const name = ref("");
+const email = ref("");
+const phone = ref("");
+const terms = ref(false);
+const text = ref("");
+const textWordCount = ref(0);
+
+const nameInvalid = ref(false);
+const emailInvalid = ref(false);
+const phoneInvalid = ref(false);
+const textInvalid = ref(false);
+
+const validateText = () => {
+  const words = text.value
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word !== ""); // Count non-empty words
+  const wordCount = words.length;
+
+  textWordCount.value = wordCount;
+
+  const minWords = 20;
+  const maxWords = 200;
+
+  if (!text.value || wordCount < minWords || wordCount > maxWords) {
+    textInvalid.value = true;
+    return false;
+  }
+
+  textInvalid.value = false;
+  return true;
+};
+
+watchEffect(() => {
+  validateText();
+});
+
+const onSubmit = () => {
+  // If terms are not accepted
+  if (!terms.value) {
+    return;
+  }
+  if (
+    !name.value ||
+    name.value.split(" ").length < 2 ||
+    name.value.length < 4
+  ) {
+    nameInvalid.value = true;
+    return;
+  }
+  nameInvalid.value = false;
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email.value)) {
+    emailInvalid.value = true;
+    return;
+  } else {
+    emailInvalid.value = false;
+  }
+
+  if (!phone.value) {
+    phoneInvalid.value = true;
+  } else {
+    phoneInvalid.value = false;
+  }
+
+  if (!validateText()) {
+    return;
+  }
+
+  if (
+    nameInvalid.value ||
+    emailInvalid.value /* add other conditions as needed */
+  ) {
+    return;
+  }
+
+  // TODO: Submission logic
+  console.log("Form submitted:", {
+    name: name.value,
+    email: email.value,
+    phone: phone.value,
+    terms: terms.value,
+    text: text.value,
+  });
+};
+
 const onClickLogin = () => {
   return navigateTo("/login");
 };
@@ -148,24 +325,33 @@ const tabs = ref([
   {
     title: "¿Cómo solicitar un préstamo online?",
     content:
-      "Lorem ipsum dolor sit amet consectetur. Nisi vel venenatis id a arcu lectus lorem felis. Ipsum amet laoreeteleifend fermentum aliquet amet elementum facilisi ut. Ut convallis semper fames ultricies neque nunc.Et magna adipiscing adipiscing viverra vestibulum.",
+      "Accede a la plataforma en línea de SaCat, crea una cuenta o si ya cuentas con una, inicia sesión. Una vez logueado podrás acceder a la calculadora de plan de pagos, para la cual tendrás que ingresar los datos requeridos. Completa el formulario y nuestro equipo se encargará de comunicarse contigo para verificar los siguientes pasos.",
   },
   {
     title: "¿Qué necesito para solicitar un préstamo online?",
     content:
-      "Lorem ipsum dolor sit amet consectetur. Nisi vel venenatis id a arcu lectus lorem felis. Ipsum amet laoreeteleifend fermentum aliquet amet elementum facilisi ut. Ut convallis semper fames ultricies neque nunc.Et magna adipiscing adipiscing viverra vestibulum.",
+      "Al momento de realizar la corrida se te van a pedir datos como el valor del vehículo, porcentaje de cuota inicial, porcentaje de financiación, el tipo de tasa que se va a usar, la cantidad de cuotas, entre otros datos más.",
   },
   {
     title: "¿Puedo personalizar mi préstamo online?",
     content:
-      "Lorem ipsum dolor sit amet consectetur. Nisi vel venenatis id a arcu lectus lorem felis. Ipsum amet laoreeteleifend fermentum aliquet amet elementum facilisi ut. Ut convallis semper fames ultricies neque nunc.Et magna adipiscing adipiscing viverra vestibulum.",
+      "Sí, ofrecemos opciones de personalización para adaptarnos a tus necesidades financieras. Puedes ajustar el monto del préstamo, el plazo de pago y, en algunos casos, la tasa de interés según tus preferencias y capacidad de pago. Nuestro objetivo es proporcionar flexibilidad para que encuentres la mejor solución para tus circunstancias.",
   },
   {
     title: "¿En cuánto tiempo recibiré el préstamo?",
     content:
-      "Lorem ipsum dolor sit amet consectetur. Nisi vel venenatis id a arcu lectus lorem felis. Ipsum amet laoreeteleifend fermentum aliquet amet elementum facilisi ut. Ut convallis semper fames ultricies neque nunc.Et magna adipiscing adipiscing viverra vestibulum.",
+      "El tiempo de aprobación y desembolso de tu préstamo puede variar, pero nos esforzamos por proporcionar respuestas rápidas. Una vez que hayas completado la solicitud en línea y proporcionado la documentación necesaria, nuestro equipo revisará tu solicitud en el menor tiempo posible. La mayoría de los clientes reciben sus fondos en 48 horas después de la aprobación.",
   },
 ]);
 </script>
 
-<style></style>
+<style>
+.p-inputtext {
+  border-radius: 1rem;
+  border-width: 0rem;
+  background-color: #e3f9eb;
+}
+.p-button {
+  border-radius: 1rem;
+}
+</style>

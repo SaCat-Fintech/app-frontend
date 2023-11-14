@@ -7,7 +7,7 @@
       <p class="text-3xl">
         Si usted presenta alguna duda puede usar estos canales de atención:
       </p>
-      <form class="px-4: lg:px-20 xl:px-40" @submit="onSubmit">
+      <form class="px-4 lg:px-20 xl:px-40" @submit="onSubmit">
         <div
           class="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-5 mt-10 lg:mt-32 gap-10 xl:gap-x-20"
         >
