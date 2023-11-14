@@ -141,7 +141,13 @@
             }"
           >
             <template #body="slotProps">
-              <Button icon="pi pi-eye" text rounded aria-label="Details" />
+              <Button
+                @click="navigateTo('/session/details/' + slotProps.data.id)"
+                icon="pi pi-eye"
+                text
+                rounded
+                aria-label="Details"
+              />
             </template>
           </Column>
         </DataTable>
@@ -329,7 +335,7 @@ const exportCSV = () => {
   // Create a download link and trigger a click to download the file
   const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);
-  link.download = "exported_data.csv";
+  link.download = "historial_corridas.csv";
   link.click();
 };
 </script>

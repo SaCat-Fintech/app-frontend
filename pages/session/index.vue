@@ -3,7 +3,7 @@
     <nav>
       <Navbar />
     </nav>
-    <div class="px-4 md:px-20 mt-4">
+    <div class="px-4 md:px-40 mt-4">
       <h2 class="text-center">¿Sabías esto?</h2>
       <h3 class="mt-6 mb-4">¿Qué es una tasa de interés?</h3>
       <p class="text-justify">
