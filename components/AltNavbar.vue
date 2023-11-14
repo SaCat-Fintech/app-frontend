@@ -1,8 +1,10 @@
 <template>
   <div class="flex w-screen justify-between pt-6 px-10">
     <div class="hidden md:flex">
-      <NuxtImg class="w-8" src="nav-cat.png" />
-      <p class="mt-2 ml-2">SaCat</p>
+      <NuxtLink to="/" class="flex flex-row">
+        <NuxtImg class="h-12" src="nav-cat.png" />
+        <p class="mt-2 ml-2">SaCat</p>
+      </NuxtLink>
     </div>
     <p class="mt-2">
       {{ navQuestion }}
