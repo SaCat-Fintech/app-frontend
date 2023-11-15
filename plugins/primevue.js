@@ -12,6 +12,7 @@ import Dropdown from "primevue/dropdown";
 import Checkbox from "primevue/checkbox";
 import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
+import ToastService from "primevue/toastservice";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup";
@@ -39,5 +40,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Row", Row);
   nuxtApp.vueApp.component("Accordion", Accordion);
   nuxtApp.vueApp.component("AccordionTab", AccordionTab);
+  nuxtApp.vueApp.use(ToastService);
   //other components that you need
 });

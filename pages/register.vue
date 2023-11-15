@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <div class="h-screen">
     <nav>
       <AltNavbar
@@ -21,7 +22,7 @@
         <form @submit.prevent="onSubmitForm" class="flex flex-col">
           <InputText
             id="dni"
-            v-model="dni"
+            v-model="formData.dni"
             class="w-72 sm:w-96 h-12 mt-4"
             placeholder="DNI"
             required
@@ -33,7 +34,7 @@
           </small>
           <InputText
             id="name"
-            v-model="name"
+            v-model="formData.name"
             class="w-72 sm:w-96 h-12 mt-4"
             placeholder="Nombre"
             required
@@ -45,7 +46,7 @@
           </small>
           <InputText
             id="lastName"
-            v-model="lastName"
+            v-model="formData.lastName"
             class="w-72 sm:w-96 h-12 mt-4"
             placeholder="Apellido"
             required
@@ -57,7 +58,7 @@
           </small>
           <Calendar
             id="dateOfBirth"
-            v-model="dateOfBirth"
+            v-model="formData.dateOfBirth"
             class="w-72 sm:w-96 h-12 mt-4"
             placeholder="Fecha de nacimiento"
             required
@@ -69,7 +70,7 @@
           </small>
           <InputText
             id="email"
-            v-model="email"
+            v-model="formData.email"
             class="w-72 sm:w-96 h-12 mt-4"
             placeholder="Email"
             required
@@ -82,7 +83,7 @@
 
           <InputText
             id="password"
-            v-model="password"
+            v-model="formData.password"
             class="w-72 sm:w-96 h-12 mt-4"
             placeholder="Contraseña"
             type="text"
@@ -106,83 +107,150 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-export default {
-  data() {
-    return {
-      dni: "",
-      name: "",
-      lastName: "",
-      dateOfBirth: "",
-      email: "",
-      password: "",
-      dniInvalid: false,
-      nameInvalid: false,
-      lastNameInvalid: false,
-      dateOfBirthInvalid: false,
-      emailInvalid: false,
-      passwordInvalid: false,
-    };
-  },
-  computed: {},
-  methods: {
-    onSubmitForm() {
-      this.dniInvalid = !this.isValidDni();
-      this.nameInvalid = !this.isValidName(this.name);
-      this.lastNameInvalid = !this.isValidName(this.lastName);
-      this.dateOfBirthInvalid = !this.isValidDateOfBirth();
-      this.emailInvalid = !this.isValidEmail();
-      this.passwordInvalid = !this.isValidPassword();
+<script setup lang="ts">
+import { useToast } from "primevue/usetoast";
+import { useRouter } from "vue-router";
 
-      if (
-        this.isValidDni() &&
-        this.isValidName(this.name) &&
-        this.isValidName(this.lastName) &&
-        this.isValidDateOfBirth() &&
-        this.isValidEmail() &&
-        this.isValidPassword()
-      ) {
-        // Form is valid, proceed with submission
-        console.log("Form is valid");
-        // You can submit the form data to your server or perform other actions here.
+const toast = useToast();
+const router = useRouter();
+
+const formData = ref({
+  dni: "",
+  name: "",
+  lastName: "",
+  dateOfBirth: "",
+  email: "",
+  password: "",
+});
+
+const dniInvalid = ref(false);
+const nameInvalid = ref(false);
+const lastNameInvalid = ref(false);
+const dateOfBirthInvalid = ref(false);
+const emailInvalid = ref(false);
+const passwordInvalid = ref(false);
+const toastLifetime = 3500;
+
+const onSubmitForm = async () => {
+  dniInvalid.value = !isValidDni();
+  nameInvalid.value = !isValidName(formData.value.name);
+  lastNameInvalid.value = !isValidName(formData.value.lastName);
+  dateOfBirthInvalid.value = !isValidDateOfBirth();
+  emailInvalid.value = !isValidEmail();
+  passwordInvalid.value = !isValidPassword();
+
+  if (
+    isValidDni() &&
+    isValidName(formData.value.name) &&
+    isValidName(formData.value.lastName) &&
+    isValidDateOfBirth() &&
+    isValidEmail() &&
+    isValidPassword()
+  ) {
+    // Form is valid, proceed with submission
+    try {
+      const response = await $fetch(
+        "http://localhost:3000/api/v1/auth/signUp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.value.email,
+            password: formData.value.password,
+            dni: formData.value.dni,
+            first_name: formData.value.name,
+            last_name: formData.value.lastName,
+            birthdate: formData.value.dateOfBirth,
+          }),
+          redirect: "follow",
+        },
+      );
+
+      if (response) {
+        showSuccessDialog();
       } else {
-        // Form is invalid, show error messages or prevent submission
-        console.log("Form is invalid");
+        showFailureDialog(
+          "No se realizado el registro correctamente. Intentelo de nuevo.",
+        );
       }
-    },
-    isValidDni() {
-      return /^[0-9]{8}$/.test(this.dni);
-    },
-    isValidName(nameValue: string) {
-      return /^[a-zA-Z]{1,16}$/.test(nameValue);
-    },
-    isValidDateOfBirth() {
-      const currentDate = new Date();
-      const inputDate = new Date(this.dateOfBirth);
+    } catch (error: any) {
+      // Registration failed
+      showFailureDialog(error.message);
+    }
+  } else {
+    // Form is invalid, show error messages or prevent submission
+    showFailureDialog(
+      "No se realizado el registro correctamente. Intentelo de nuevo.",
+    );
+  }
+};
 
-      // Difference of age in years
-      let age = currentDate.getFullYear() - inputDate.getFullYear();
+const showSuccessDialog = () => {
+  formData.value = {
+    dni: "",
+    name: "",
+    lastName: "",
+    dateOfBirth: "",
+    email: "",
+    password: "",
+  };
 
-      // Check if birthday has already ocurred
-      if (
-        currentDate.getMonth() < inputDate.getMonth() ||
-        (currentDate.getMonth() === inputDate.getMonth() &&
-          currentDate.getDate() < inputDate.getDate())
-      ) {
-        age--;
-      }
+  toast.add({
+    severity: "success",
+    summary: "Registro exitoso",
+    detail: "Se ha creado el registro existosamente",
+    life: toastLifetime,
+  });
 
-      return age >= 18;
-    },
-    isValidEmail() {
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      return emailPattern.test(this.email);
-    },
-    isValidPassword() {
-      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
-      return passwordPattern.test(this.password) && this.password.length >= 8;
-    },
-  },
+  setTimeout(() => {
+    router.push("/login");
+  }, toastLifetime);
+};
+const showFailureDialog = (errorMessage: string) => {
+  toast.add({
+    severity: "error",
+    summary: "Rechazado",
+    detail: errorMessage,
+    life: toastLifetime,
+  });
+};
+const isValidDni = () => {
+  return /^[0-9]{8}$/.test(formData.value.dni);
+};
+const isValidName = (nameValue: string) => {
+  return /^[a-zA-Z]{1,16}$/.test(nameValue);
+};
+
+const isValidDateOfBirth = () => {
+  const currentDate = new Date();
+  const inputDate = new Date(formData.value.dateOfBirth);
+
+  // Difference of age in years
+  let age = currentDate.getFullYear() - inputDate.getFullYear();
+
+  // Check if birthday has already ocurred
+  if (
+    currentDate.getMonth() < inputDate.getMonth() ||
+    (currentDate.getMonth() === inputDate.getMonth() &&
+      currentDate.getDate() < inputDate.getDate())
+  ) {
+    age--;
+  }
+
+  return age >= 18;
+};
+const isValidEmail = () => {
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  return emailPattern.test(formData.value.email);
+};
+const isValidPassword = () => {
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
+  return (
+    passwordPattern.test(formData.value.password) &&
+    formData.value.password.length >= 8
+  );
 };
 </script>
 
