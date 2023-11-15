@@ -114,6 +114,8 @@ import { useRouter } from "vue-router";
 const toast = useToast();
 const router = useRouter();
 
+const config = useRuntimeConfig();
+
 const formData = ref({
   dni: "",
   name: "",
@@ -150,7 +152,7 @@ const onSubmitForm = async () => {
     // Form is valid, proceed with submission
     try {
       const response = await $fetch(
-        "http://localhost:3000/api/v1/auth/signUp",
+        config.public.baseUrl + "/api/v1/auth/signUp",
         {
           method: "POST",
           headers: {
@@ -168,16 +170,12 @@ const onSubmitForm = async () => {
         },
       );
 
-      if (response) {
-        showSuccessDialog();
-      } else {
-        showFailureDialog(
-          "No se realizado el registro correctamente. Intentelo de nuevo.",
-        );
-      }
+      showSuccessDialog();
     } catch (error: any) {
       // Registration failed
-      showFailureDialog(error.message);
+      showFailureDialog(
+        "No se realizado el registro correctamente. Es posible que ya exista. Intentelo de nuevo.",
+      );
     }
   } else {
     // Form is invalid, show error messages or prevent submission
