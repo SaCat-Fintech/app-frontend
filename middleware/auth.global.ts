@@ -1,6 +1,11 @@
 import { defineNuxtRouteMiddleware, navigateTo } from "nuxt/app";
 
 export default defineNuxtRouteMiddleware((to, from) => {
+  // Check if the code is running on the server side
+  if (process.server) {
+    return; // Do nothing on the server side
+  }
+
   // Check if the jwtToken variable is present in localStorage
   const jwtToken = process.client ? localStorage.getItem("jwtToken") : null;
 
