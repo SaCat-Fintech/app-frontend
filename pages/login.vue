@@ -11,15 +11,7 @@
     <div class="flex justify-center items-center h-5/6">
       <div class="text-center flex flex-col gap-4">
         <p class="text-xl sm:text-2xl">Inicia sesión con tu cuenta</p>
-        <Button
-          icon="pi pi-google"
-          iconPos="left"
-          severity="secondary"
-          class="w-72 sm:w-96 h-12"
-          label="Inicia sesión con Google"
-        />
-        <p class="text-xl sm:text-2xl mb-2">o</p>
-        <form @submit.prevent="onSubmitForm" class="flex flex-col">
+        <form @submit.prevent="onSubmitForm" class="flex flex-col mt-4">
           <InputText
             id="email"
             v-model="formData.email"
@@ -30,10 +22,10 @@
             :class="{ 'p-invalid': emailInvalid }"
           />
           <small v-if="emailInvalid" class="p-error text-left">
-            Formato inválido de correo
+            Ingrese un correo válido registrado, por ejemplo: test@mail.com
           </small>
 
-          <span class="p-input-icon-right mt-6">
+          <span class="p-input-icon-right mt-6 w-72 sm:w-96">
             <i
               class="pi"
               :class="{ 'pi-eye-slash': showPassword, 'pi-eye': !showPassword }"
@@ -50,8 +42,9 @@
               :class="{ 'p-invalid': passwordInvalid }"
             />
           </span>
-          <small v-if="passwordInvalid" class="p-error text-left">
-            Formato inválido de contraseña
+          <small v-if="passwordInvalid" class="p-error text-left w-72 sm:w-96">
+            La contraseña debe tener 8 caracteres como mínimo, 1 letra en
+            minúscula, 1 en mayúscula y 1 número como mínimo.
           </small>
 
           <div class="mt-4">
@@ -106,10 +99,13 @@ const onSubmitForm = async () => {
         },
       );
 
-      const jsonResponse = JSON.parse(response);
-      const token = jsonResponse.token;
+      const token = response.jwt_token;
+      const full_name = response.full_name;
+      const user_profile_id = response.user_profile_id;
 
       localStorage.setItem("jwtToken", token);
+      localStorage.setItem("full_name", full_name);
+      localStorage.setItem("user_profile_id", user_profile_id);
 
       if (token) {
         formData.value = {
@@ -124,6 +120,7 @@ const onSubmitForm = async () => {
         );
       }
     } catch (error: any) {
+      console.log(error);
       // Registration failed
       showFailureDialog(
         "Las credenciales usadas no son correctas. Intentelo de nuevo.",

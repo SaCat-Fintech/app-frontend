@@ -5,7 +5,18 @@
     </nav>
     <div class="flex justify-center items-center h-5/6">
       <div class="flex flex-col gap-4 items-center">
-        <div class="grid grid-cols-2 sm:grid-cols-4 text-left w-[54rem] m-10">
+        <Button
+          class="absolute left-10 top-20"
+          label="Atrás"
+          icon="pi pi-arrow-left"
+          text
+          @click="navigateTo('/session/history')"
+        />
+        <p class="mb-4 text-4xl mt-10">
+          Detalles de Plan de Pago Nro
+          {{ route.params.id.toString() }}
+        </p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 text-left w-[54rem]">
           <div
             class="grid grid-rows-8 font-semibold"
             style="background-color: var(--light-700)"
@@ -53,6 +64,7 @@
             <div class="p-2 border border-black">Jun 1, 2023</div>
           </div>
         </div>
+        <p class="mb-4 text-4xl mt-10">Plan de Pagos</p>
         <DataTable
           :value="payments"
           showGridlines

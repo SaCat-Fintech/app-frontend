@@ -11,14 +11,6 @@
     <div class="flex justify-center items-center h-5/6">
       <div class="text-center flex flex-col gap-4">
         <p class="text-xl sm:text-2xl">Crea tu cuenta</p>
-        <Button
-          icon="pi pi-google"
-          iconPos="left"
-          severity="secondary"
-          class="w-72 sm:w-96 h-12"
-          label="Continuar con Google"
-        />
-        <p class="text-xl sm:text-2xl mb-2">o</p>
         <form @submit.prevent="onSubmitForm" class="flex flex-col">
           <InputText
             id="dni"
@@ -30,7 +22,7 @@
             :class="{ 'p-invalid': dniInvalid }"
           />
           <small v-if="dniInvalid" class="p-error text-left">
-            Formato inválido de DNI
+            Debe tener 8 caracteres y solo valores numéricos
           </small>
           <InputText
             id="name"
@@ -42,7 +34,7 @@
             :class="{ 'p-invalid': nameInvalid }"
           />
           <small v-if="nameInvalid" class="p-error text-left">
-            Formato inválido de nombre
+            Ingrese su nombre, solo debe tener caracteres alfabéticos.
           </small>
           <InputText
             id="lastName"
@@ -54,7 +46,7 @@
             :class="{ 'p-invalid': lastNameInvalid }"
           />
           <small v-if="lastNameInvalid" class="p-error text-left">
-            Formato inválido de apellido
+            Ingrese su apellido, solo debe tener caracteres alfabéticos.
           </small>
           <Calendar
             id="dateOfBirth"
@@ -78,28 +70,36 @@
             :class="{ 'p-invalid': emailInvalid }"
           />
           <small v-if="emailInvalid" class="p-error text-left">
-            Formato inválido de correo
+            Ingrese un correo válido, por ejemplo: test@mail.com
           </small>
 
-          <InputText
-            id="password"
-            v-model="formData.password"
-            class="w-72 sm:w-96 h-12 mt-4"
-            placeholder="Contraseña"
-            type="text"
-            pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
-            title="Password must contain at least 8 characters, one lowercase letter, one uppercase letter, and one number."
-            :class="{ 'p-invalid': passwordInvalid }"
-          />
-          <small v-if="passwordInvalid" class="p-error text-left">
-            Formato inválido de contraseña
+          <span class="p-input-icon-right mt-6 w-72 sm:w-96">
+            <i
+              class="pi"
+              :class="{ 'pi-eye-slash': showPassword, 'pi-eye': !showPassword }"
+              @click="showPassword = !showPassword"
+            />
+            <InputText
+              id="password"
+              v-model="formData.password"
+              class="w-72 sm:w-96 h-12"
+              placeholder="Contraseña"
+              :type="showPassword ? 'text' : 'password'"
+              pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+              title="Password must contain at least 8 characters, one lowercase letter, one uppercase letter, and one number."
+              :class="{ 'p-invalid': passwordInvalid }"
+            />
+          </span>
+          <small v-if="passwordInvalid" class="p-error text-left w-72 sm:w-96">
+            La contraseña debe tener 8 caracteres como mínimo, 1 letra en
+            minúscula, 1 en mayúscula y 1 número como mínimo.
           </small>
 
           <div class="mt-4">
             <Button
               @click="onSubmitForm"
               class="w-72 sm:w-96 h-12"
-              label="Iniciar sesión"
+              label="Crear cuenta"
             />
           </div>
         </form>
@@ -132,6 +132,7 @@ const dateOfBirthInvalid = ref(false);
 const emailInvalid = ref(false);
 const passwordInvalid = ref(false);
 const toastLifetime = 3500;
+const showPassword = ref(false);
 
 const onSubmitForm = async () => {
   dniInvalid.value = !isValidDni();

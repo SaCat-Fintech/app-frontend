@@ -5,9 +5,7 @@
     </nav>
     <div class="flex justify-center items-center h-5/6">
       <div class="text-center flex flex-col gap-4">
-        <p class="mb-4 text-left text-xl">
-          Revisa el historial de los cálculos de préstamos que haz realizado
-        </p>
+        <p class="mb-4 text-4xl">Historial de los cálculos de préstamos</p>
         <DataTable
           :value="operations"
           showGridlines
@@ -34,12 +32,13 @@
           <Column
             field="id"
             header="Código"
+            style="min-width: 4rem; text-align: center"
             :headerStyle="{
               'background-color': 'var(--light-700)',
             }"
           >
             <template #body="slotProps">
-              {{ formatCode(slotProps.data.id) }}
+              {{ slotProps.data.id }}
             </template>
           </Column>
           <Column
@@ -170,9 +169,6 @@ const periods = [
   { value: "daily", name: "Diario" },
 ];
 
-const formatCode = (value: string) => {
-  return "OP" + value.slice(0, 4) + "***";
-};
 const formatDate = (value: string) => {
   const date = new Date(value);
   const day = date.getDate().toString().padStart(2, "0");
@@ -184,7 +180,7 @@ const formatDate = (value: string) => {
 
 const operations = ref([
   {
-    id: "550e8400-e29b-41d4-a716-446655440000",
+    id: "1",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 60090.294,
     currency: "dollar",
@@ -194,7 +190,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    id: "2",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 5000.0,
     currency: "dollar",
@@ -204,7 +200,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+    id: "3",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 8000.0,
     currency: "dollar",
@@ -214,7 +210,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "4",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -224,7 +220,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "5",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -234,7 +230,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "6",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -244,7 +240,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "7",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -254,7 +250,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "8",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -264,7 +260,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "9",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -274,7 +270,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "10",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -284,7 +280,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "11",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -294,7 +290,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "12",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -304,7 +300,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "13",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
@@ -314,7 +310,7 @@ const operations = ref([
     payment_frequency: "mensual",
   },
   {
-    id: "a987fbc9-4bed-3078-cf07-9141ba07c9f3",
+    id: "14",
     created_at: "1999-01-08 04:05:06",
     vehicle_cost: 9000.0,
     currency: "dollar",
