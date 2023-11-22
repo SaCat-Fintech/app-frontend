@@ -24,7 +24,8 @@
     </TabMenu>
     <router-view />
     <div class="flex flex-row pl-4">
-      <Avatar label="P" class="lg:mr-4" size="large" />
+      <Avatar label="P" class="lg:mr-4" size="large" @click="toggle" />
+      <Menu ref="menu" id="overlay_menu" :model="menuItems" :popup="true" />
       <p class="hidden lg:flex mt-4">Pedro Soto</p>
     </div>
   </div>
@@ -36,6 +37,27 @@ import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
+
+const toggle = (event: any) => {
+  menu.value.toggle(event);
+};
+
+const menu = ref();
+const menuItems = ref([
+  {
+    label: "Opciones",
+    items: [
+      {
+        label: "Cerrar sesión",
+        icon: "pi pi-sign-out",
+        command: () => {
+          localStorage.removeItem("jwtToken");
+          router.push("/login");
+        },
+      },
+    ],
+  },
+]);
 
 const active = ref(0);
 const items = ref([

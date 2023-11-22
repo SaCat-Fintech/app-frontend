@@ -206,6 +206,7 @@ const showSuccessDialog = () => {
     router.push("/login");
   }, toastLifetime);
 };
+
 const showFailureDialog = (errorMessage: string) => {
   toast.add({
     severity: "error",

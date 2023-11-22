@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <div class="h-screen">
     <nav>
       <AltNavbar
@@ -21,7 +22,7 @@
         <form @submit.prevent="onSubmitForm" class="flex flex-col">
           <InputText
             id="email"
-            v-model="email"
+            v-model="formData.email"
             class="w-72 sm:w-96 h-12"
             placeholder="Email"
             required
@@ -40,7 +41,7 @@
             />
             <InputText
               id="password"
-              v-model="password"
+              v-model="formData.password"
               class="w-72 sm:w-96 h-12"
               placeholder="Contraseña"
               :type="showPassword ? 'text' : 'password'"
@@ -65,41 +66,97 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-export default {
-  data() {
-    return {
-      email: "",
-      password: "",
-      showPassword: false,
-      emailInvalid: false,
-      passwordInvalid: false,
-    };
-  },
-  computed: {},
-  methods: {
-    onSubmitForm() {
-      this.emailInvalid = !this.isValidEmail();
-      this.passwordInvalid = !this.isValidPassword();
+<script setup lang="ts">
+import { useToast } from "primevue/usetoast";
+import { useRouter } from "vue-router";
 
-      if (this.isValidEmail() && this.isValidPassword()) {
-        // Form is valid, proceed with submission
-        console.log("Form is valid");
-        // You can submit the form data to your server or perform other actions here.
+const toast = useToast();
+const router = useRouter();
+
+const config = useRuntimeConfig();
+
+const formData = ref({
+  email: "",
+  password: "",
+});
+const showPassword = ref(false);
+const emailInvalid = ref(false);
+const passwordInvalid = ref(false);
+const toastLifetime = 3500;
+
+const onSubmitForm = async () => {
+  emailInvalid.value = !isValidEmail();
+  passwordInvalid.value = !isValidPassword();
+
+  if (isValidEmail() && isValidPassword()) {
+    // Form is valid, proceed with submission
+    try {
+      const response: any = await $fetch(
+        config.public.baseUrl + "/api/v1/auth/signIn",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.value.email,
+            password: formData.value.password,
+          }),
+          redirect: "follow",
+        },
+      );
+
+      const jsonResponse = JSON.parse(response);
+      const token = jsonResponse.token;
+
+      localStorage.setItem("jwtToken", token);
+
+      if (token) {
+        formData.value = {
+          email: "",
+          password: "",
+        };
+        // Push to another site
+        router.push("/session");
       } else {
-        // Form is invalid, show error messages or prevent submission
-        console.log("Form is invalid");
+        showFailureDialog(
+          "Hubo un problema en el servidor. Intentelo de nuevo.",
+        );
       }
-    },
-    isValidEmail() {
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      return emailPattern.test(this.email);
-    },
-    isValidPassword() {
-      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
-      return passwordPattern.test(this.password) && this.password.length >= 8;
-    },
-  },
+    } catch (error: any) {
+      // Registration failed
+      showFailureDialog(
+        "Las credenciales usadas no son correctas. Intentelo de nuevo.",
+      );
+    }
+  } else {
+    // Form is invalid, show error messages or prevent submission
+    showFailureDialog(
+      "Los campos tienen un formato incorrecto. Intentelo de nuevo.",
+    );
+  }
+};
+
+const showFailureDialog = (errorMessage: string) => {
+  toast.add({
+    severity: "error",
+    summary: "Credenciales incorrectas",
+    detail: errorMessage,
+    life: toastLifetime,
+  });
+};
+
+const isValidEmail = () => {
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  return emailPattern.test(formData.value.email);
+};
+
+const isValidPassword = () => {
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
+  return (
+    passwordPattern.test(formData.value.password) &&
+    formData.value.password.length >= 8
+  );
 };
 </script>
 

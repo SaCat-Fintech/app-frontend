@@ -20,6 +20,8 @@ import Row from "primevue/row";
 import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 
+import Menu from "primevue/menu";
+
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
   nuxtApp.vueApp.component("Button", Button);
@@ -41,5 +43,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Accordion", Accordion);
   nuxtApp.vueApp.component("AccordionTab", AccordionTab);
   nuxtApp.vueApp.use(ToastService);
+  nuxtApp.vueApp.component("Menu", Menu);
   //other components that you need
 });
