@@ -48,6 +48,19 @@
             mínimo.
           </small>
 
+          <small class="flex flex-row mt-4">
+            <div class="mr-1">¿Te olvidaste tu contraseña?</div>
+            <div
+              class="underline underline-offset-2"
+              style="color: var(--primary-color)"
+              v-tooltip="
+                'Comunicate con nuestra central al 900 000 000 y provee tus datos al operador. Te brindaremos ayuda inmediata una vez validemos tus datos.'
+              "
+              @click="visible = true"
+            >
+              Recuperala aquí
+            </div>
+          </small>
           <div class="mt-4">
             <Button
               @click="onSubmitForm"
@@ -68,6 +81,8 @@ const toast = useToast();
 const router = useRouter();
 
 const config = useRuntimeConfig();
+
+const visible = ref(false);
 
 const formData = ref({
   email: "",

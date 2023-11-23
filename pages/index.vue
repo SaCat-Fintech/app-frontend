@@ -238,7 +238,7 @@
           amet
         </p>
         <p><span class="font-bold">Correo electrónico: </span>sacat@mail.com</p>
-        <p><span class="font-bold">Teléfono: </span><br />900.000 000</p>
+        <p><span class="font-bold">Teléfono: </span><br />900 000 000</p>
       </div>
     </form>
   </footer>

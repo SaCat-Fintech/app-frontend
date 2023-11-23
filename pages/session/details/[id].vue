@@ -23,11 +23,11 @@
           >
             <div class="p-2 border border-black">Tipo de Moneda:</div>
             <div class="p-2 border border-black">Cuota Inicial:</div>
-            <div class="p-2 border border-black">Primera Tasa:</div>
+            <div class="p-2 border border-black">Tasa Ingresada:</div>
+            <div class="p-2 border border-black">Tiempo de tasa:</div>
             <div class="p-2 border border-black">Capitalización:</div>
             <div class="p-2 border border-black">Frecuencia de Pago:</div>
             <div class="p-2 border border-black">Número de Pagos:</div>
-            <div class="p-2 border border-black">Plazo de Gracia:</div>
             <div class="p-2 border border-black">COK:</div>
             <div class="p-2 border border-black">TIR:</div>
           </div>
@@ -52,6 +52,13 @@
             </div>
             <div class="p-2 border border-black">
               {{
+                periods.find(
+                  (cap) => cap.value === response?.inputData.rate.rate_period,
+                )?.name
+              }}
+            </div>
+            <div class="p-2 border border-black">
+              {{
                 response?.inputData.rate.capitalization_period === "null"
                   ? "-"
                   : periods.find(
@@ -72,13 +79,6 @@
               {{ response?.inputData.amount_of_fees }}
             </div>
             <div class="p-2 border border-black">
-              {{
-                gracePeriodTypes.find(
-                  (cap) => cap.value === response?.inputData.gracePeriod.type,
-                )?.name
-              }}
-            </div>
-            <div class="p-2 border border-black">
               {{ Number(response?.inputData.cok_percentage) * 100 }}%
             </div>
             <div class="p-2 border border-black">
@@ -96,7 +96,7 @@
             <div class="p-2 border border-black">Precio del vehículo:</div>
             <div class="p-2 border border-black">Precio a financiar:</div>
             <div class="p-2 border border-black">Tasa a convertir:</div>
-            <div class="p-2 border border-black">Amortización:</div>
+            <div class="p-2 border border-black">Amortización Total:</div>
             <div class="p-2 border border-black">Número de años:</div>
             <div class="p-2 border border-black">Tipo de periodo:</div>
             <div class="p-2 border border-black">Periodo(s) de gracia:</div>
@@ -127,12 +127,22 @@
                 ) * 100
               }}% TEM
             </div>
-            <div class="p-2 border border-black">TODOOOOO</div>
+            <div class="p-2 border border-black">
+              {{
+                totalAmortization()
+                  .toFixed(2)
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }}
+            </div>
             <div class="p-2 border border-black">
               {{ response?.financingResult.number_of_years }}
             </div>
             <div class="p-2 border border-black">
-              me maree que es tipo de periodo
+              {{
+                gracePeriodTypes.find(
+                  (cap) => cap.value === response?.inputData.gracePeriod.type,
+                )?.name
+              }}
             </div>
             <div class="p-2 border border-black">
               {{ response?.inputData.gracePeriod.period_numbers }}
@@ -176,23 +186,14 @@
           </template>
           <Column
             field="id"
-            header="Nro"
+            header="N°"
             :headerStyle="{
               'background-color': 'var(--light-700)',
             }"
           >
             <template #body="slotProps">
-              {{ slotProps.data.id }}
+              {{ slotProps.data.payment_number }}
             </template>
-          </Column>
-          <Column
-            field="tem"
-            header="TEM"
-            :headerStyle="{
-              'background-color': 'var(--light-700)',
-            }"
-          >
-            <template #body="slotProps"> {{ slotProps.data.tem }} % </template>
           </Column>
           <Column
             field="pg"
@@ -202,7 +203,7 @@
             }"
           >
             <template #body="slotProps">
-              {{ slotProps.data.pg }}
+              {{ gracePeriodEntry(slotProps.data) }}
             </template>
           </Column>
           <Column
@@ -214,7 +215,7 @@
           >
             <template #body="slotProps">
               {{
-                slotProps.data.initialPayment
+                Number(slotProps.data.initial_balance)
                   .toFixed(2)
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }}
@@ -229,7 +230,7 @@
           >
             <template #body="slotProps">
               {{
-                slotProps.data.interest
+                Number(slotProps.data.interest_amount)
                   .toFixed(2)
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }}
@@ -244,13 +245,15 @@
           >
             <template #body="slotProps">
               {{
-                slotProps.data.rateType === "nominal" ? "Nominal" : "Efectiva"
+                Number(slotProps.data.installment)
+                  .toFixed(2)
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }}
             </template>
           </Column>
           <Column
             field="amortization"
-            header="Amort."
+            header="Amortización"
             :headerStyle="{
               'background-color': 'var(--light-700)',
             }"
@@ -268,7 +271,22 @@
           >
             <template #body="slotProps">
               {{
-                slotProps.data.finalBalance
+                Number(slotProps.data.outstanding_balance)
+                  .toFixed(2)
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }}
+            </template>
+          </Column>
+          <Column
+            field="flow"
+            header="Flujo"
+            :headerStyle="{
+              'background-color': 'var(--light-700)',
+            }"
+          >
+            <template #body="slotProps">
+              {{
+                Number(slotProps.data.payment_amount)
                   .toFixed(2)
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }}
@@ -373,7 +391,7 @@ interface ApiResponse {
   financingResult: FinancingResult;
 }
 
-const payments = ref([
+const payments = ref<PaymentInstallment[]>([
   // {
   //   id: 1,
   //   tem: 5.6,
@@ -411,7 +429,9 @@ const fetchDetails = async () => {
     );
 
     response.value = apiResponse;
-    console.log(response.value);
+
+    // Better separate this so it's not so big
+    payments.value = response.value.paymentInstallments;
   } catch (error) {
     console.error("Error fetching operations:", error);
   }
@@ -443,6 +463,35 @@ const exportCSV = () => {
   link.click();
 };
 
-// Which id you're using
-console.log(route.params.id);
+const gracePeriodEntry = (entry: PaymentInstallment) => {
+  const gracePeriodType = response.value?.inputData.gracePeriod.type;
+
+  if (gracePeriodType === "NONE") {
+    return "S";
+  } else {
+    const gracePeriodList =
+      response.value?.inputData.gracePeriod.period_numbers;
+
+    if (gracePeriodList && gracePeriodList.includes(entry.payment_number)) {
+      if (gracePeriodType === "TOTAL") {
+        return "TOTAL";
+      } else {
+        return "PARCIAL";
+      }
+    } else {
+      return "S";
+    }
+  }
+};
+
+const totalAmortization = () => {
+  const amortizationList = payments.value.map(
+    (payment) => parseFloat(payment.amortization) || 0,
+  );
+  const total = amortizationList.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0,
+  );
+  return total;
+};
 </script>
