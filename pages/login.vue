@@ -44,7 +44,8 @@
           </span>
           <small v-if="passwordInvalid" class="p-error text-left w-72 sm:w-96">
             La contraseña debe tener 8 caracteres como mínimo, 1 letra en
-            minúscula, 1 en mayúscula y 1 número como mínimo.
+            minúscula, 1 en mayúscula, 1 número y 1 carácter especial como
+            mínimo.
           </small>
 
           <div class="mt-4">

@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <div class="h-screen">
     <nav>
       <Navbar />
@@ -479,6 +480,9 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch } from "vue";
+import { useToast } from "primevue/usetoast";
+
+const toast = useToast();
 
 const formData = ref({
   currency: "soles",
@@ -498,6 +502,27 @@ const formData = ref({
   secondFee: null,
   thirdFee: null,
 });
+
+const formDataValid = ref({
+  currency: true,
+  vehicleCost: false,
+  initialPaymentPercentage: false,
+  financingPercentage: false,
+  rateType: true,
+  rateValue: false,
+  capitalization: false,
+  ratePeriod: false,
+  paymentFrequency: false,
+  feesAmount: false,
+  cok: false,
+  gracePeriodType: false,
+  gracePeriodNumber: false,
+  firstFee: false,
+  secondFee: false,
+  thirdFee: false,
+});
+
+const toastLifetime = 3500;
 
 const capitalizations = ref([
   { value: "annually", name: "Anual" },
@@ -632,9 +657,92 @@ const handleGracePeriodNumberChange = () => {
 watch(() => formData.value.gracePeriodType, handleGracePeriodChange);
 watch(() => formData.value.rateType, handleRateTypeChange);
 
+const validateForm = () => {
+  for (const key in formData.value) {
+    if (!formData.value[key]) {
+      formDataValid.value[key] = false;
+    } else {
+      formDataValid.value[key] = true;
+    }
+  }
+
+  // if rateType is "effective", capitalization is valid
+  if (formData.value.rateType === "effective") {
+    formDataValid.value.capitalization = true;
+  }
+
+  // if gracePeriodType is "NONE", then  FirstFee, SecondFee, ThirdFee, gracePeriodNumber are valid
+  if (
+    formData.value.gracePeriodType &&
+    formData.value.gracePeriodType.value === "NONE"
+  ) {
+    formDataValid.value.firstFee = true;
+    formDataValid.value.secondFee = true;
+    formDataValid.value.thirdFee = true;
+    formDataValid.value.gracePeriodNumber = true;
+  }
+
+  // if gracePeriodNumber is 1, then  SecondFee, Third Fee are valid
+  if (
+    formData.value.gracePeriodNumber &&
+    formData.value.gracePeriodNumber.value === 1
+  ) {
+    formDataValid.value.secondFee = true;
+    formDataValid.value.thirdFee = true;
+  }
+
+  // if gracePeriodNumber is 2, then Third Fee is valid
+  if (
+    formData.value.gracePeriodNumber &&
+    formData.value.gracePeriodNumber.value === 2
+  ) {
+    formDataValid.value.thirdFee = true;
+  }
+
+  // FirstFee, SecondFee, ThirdFee have to be different
+  if (
+    formData.value.firstFee === formData.value.secondFee ||
+    formData.value.firstFee === formData.value.thirdFee ||
+    formData.value.secondFee === formData.value.thirdFee
+  ) {
+    formDataValid.value.firstFee = false;
+    formDataValid.value.secondFee = false;
+    formDataValid.value.thirdFee = false;
+
+    toast.add({
+      severity: "error",
+      summary: "Hay periodos iguales",
+      detail:
+        "Los periodos no pueden ser iguales. Porfavor coloque valores de periodos.",
+      life: toastLifetime,
+    });
+    return false;
+  }
+
+  if (Object.values(formDataValid.value).every((valid) => valid)) {
+    return true;
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Campos vacios",
+      detail: "Es posible que esten faltando datos en la operación.",
+      life: toastLifetime,
+    });
+    return false;
+  }
+};
+
 const onSubmitForm = async () => {
   console.log("Submit logic");
   console.log(formData.value);
+
+  if (validateForm()) {
+    console.log("Form is valid. Submitting...");
+    console.log(formData.value);
+    // Add your form submission logic here
+  } else {
+    console.log("Form is invalid.");
+  }
 };
 </script>
 
