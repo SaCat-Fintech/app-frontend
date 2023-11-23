@@ -12,12 +12,15 @@ import Dropdown from "primevue/dropdown";
 import Checkbox from "primevue/checkbox";
 import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
+import ToastService from "primevue/toastservice";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup";
 import Row from "primevue/row";
 import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
+import Menu from "primevue/menu";
+import Tooltip from "primevue/tooltip";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -39,5 +42,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Row", Row);
   nuxtApp.vueApp.component("Accordion", Accordion);
   nuxtApp.vueApp.component("AccordionTab", AccordionTab);
+  nuxtApp.vueApp.use(ToastService);
+  nuxtApp.vueApp.component("Menu", Menu);
+  nuxtApp.vueApp.directive("tooltip", Tooltip);
   //other components that you need
 });

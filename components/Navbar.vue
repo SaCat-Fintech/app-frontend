@@ -24,8 +24,14 @@
     </TabMenu>
     <router-view />
     <div class="flex flex-row pl-4">
-      <Avatar label="P" class="lg:mr-4" size="large" />
-      <p class="hidden lg:flex mt-4">Pedro Soto</p>
+      <Avatar
+        :label="fullName[0]"
+        class="lg:mr-4"
+        size="large"
+        @click="toggle"
+      />
+      <Menu ref="menu" id="overlay_menu" :model="menuItems" :popup="true" />
+      <p class="hidden lg:flex mt-4">{{ fullName }}</p>
     </div>
   </div>
 </template>
@@ -36,6 +42,29 @@ import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
+
+const toggle = (event: any) => {
+  menu.value.toggle(event);
+};
+
+const menu = ref();
+const menuItems = ref([
+  {
+    label: "Opciones",
+    items: [
+      {
+        label: "Cerrar sesión",
+        icon: "pi pi-sign-out",
+        command: () => {
+          localStorage.removeItem("jwtToken");
+          localStorage.removeItem("full_name");
+          localStorage.removeItem("user_profile_id");
+          router.push("/login");
+        },
+      },
+    ],
+  },
+]);
 
 const active = ref(0);
 const items = ref([
@@ -57,10 +86,18 @@ const items = ref([
   },
 ]);
 
+const fullName = ref("");
+
 onMounted(() => {
   active.value = items.value.findIndex(
     (item) => route.path === router.resolve(item.route).path,
   );
+
+  const storedFullName = localStorage.getItem("full_name");
+
+  if (storedFullName) {
+    fullName.value = storedFullName;
+  }
 });
 
 watch(
