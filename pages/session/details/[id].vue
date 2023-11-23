@@ -32,15 +32,62 @@
             <div class="p-2 border border-black">TIR:</div>
           </div>
           <div class="grid grid-rows-9">
-            <div class="p-2 border border-black">Dolares</div>
-            <div class="p-2 border border-black">40,000</div>
-            <div class="p-2 border border-black">12.5% TNA</div>
-            <div class="p-2 border border-black">Semestral</div>
-            <div class="p-2 border border-black">16</div>
-            <div class="p-2 border border-black">16</div>
-            <div class="p-2 border border-black">Total</div>
-            <div class="p-2 border border-black">20.00000%</div>
-            <div class="p-2 border border-black">6.0949845%</div>
+            <div class="p-2 border border-black">
+              {{ response?.inputData.currency === "USD" ? "Dólar" : "Sol" }}
+            </div>
+            <div class="p-2 border border-black">
+              {{
+                Number(response?.financingResult.initial_fee_ammount)
+                  .toFixed(2)
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }}
+            </div>
+            <div class="p-2 border border-black">
+              {{ Number(response?.inputData.rate.rate_value) * 100 }}%
+              {{
+                response?.inputData.rate.rate_type === "EFFECTIVE"
+                  ? "Efectiva"
+                  : "Nominal"
+              }}
+            </div>
+            <div class="p-2 border border-black">
+              {{
+                response?.inputData.rate.capitalization_period === "null"
+                  ? "-"
+                  : periods.find(
+                      (cap) =>
+                        cap.value ===
+                        response?.inputData.rate.capitalization_period,
+                    )?.name
+              }}
+            </div>
+            <div class="p-2 border border-black">
+              {{
+                periods.find(
+                  (cap) => cap.value === response?.inputData.payment_frequency,
+                )?.name
+              }}
+            </div>
+            <div class="p-2 border border-black">
+              {{ response?.inputData.amount_of_fees }}
+            </div>
+            <div class="p-2 border border-black">
+              {{
+                gracePeriodTypes.find(
+                  (cap) => cap.value === response?.inputData.gracePeriod.type,
+                )?.name
+              }}
+            </div>
+            <div class="p-2 border border-black">
+              {{ Number(response?.inputData.cok_percentage) * 100 }}%
+            </div>
+            <div class="p-2 border border-black">
+              {{
+                Number(
+                  response?.profitabilityIndicator.internal_rate_of_return,
+                ) * 100
+              }}%
+            </div>
           </div>
           <div
             class="grid grid-rows-8 font-semibold"
@@ -57,15 +104,49 @@
             <div class="p-2 border border-black">Fecha de guardado:</div>
           </div>
           <div class="grid grid-rows-8">
-            <div class="p-2 border border-black">200,000</div>
-            <div class="p-2 border border-black">160,000</div>
-            <div class="p-2 border border-black">6.3424% TES</div>
-            <div class="p-2 border border-black">Semestral</div>
-            <div class="p-2 border border-black">8</div>
-            <div class="p-2 border border-black">8</div>
-            <div class="p-2 border border-black">10</div>
-            <div class="p-2 border border-black">US$ -884,398.34</div>
-            <div class="p-2 border border-black">Jun 1, 2023</div>
+            <div class="p-2 border border-black">
+              {{
+                Number(response?.inputData.vehicle_cost)
+                  .toFixed(2)
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }}
+            </div>
+            <div class="p-2 border border-black">
+              {{
+                Number(
+                  response?.financingResult.financed_balance_with_installment,
+                )
+                  .toFixed(2)
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }}
+            </div>
+            <div class="p-2 border border-black">
+              {{
+                Number(
+                  response?.financingResult.effective_rate_by_payment_frequency,
+                ) * 100
+              }}% TEM
+            </div>
+            <div class="p-2 border border-black">TODOOOOO</div>
+            <div class="p-2 border border-black">
+              {{ response?.financingResult.number_of_years }}
+            </div>
+            <div class="p-2 border border-black">
+              me maree que es tipo de periodo
+            </div>
+            <div class="p-2 border border-black">
+              {{ response?.inputData.gracePeriod.period_numbers }}
+            </div>
+            <div class="p-2 border border-black">
+              {{
+                response?.inputData.currency +
+                " " +
+                response?.profitabilityIndicator.net_present_value
+              }}
+            </div>
+            <div class="p-2 border border-black">
+              {{ formatDate(response?.created_at!) }}
+            </div>
           </div>
         </div>
         <p class="mb-4 text-4xl mt-10">Plan de Pagos</p>
@@ -201,180 +282,152 @@
 
 <script setup lang="ts">
 import Papa from "papaparse";
+
 const route = useRoute();
 
-const payments = ref([
-  {
-    id: 1,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 2,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 3,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 4,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 5,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 6,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 7,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 8,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 9,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 9,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 9,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 9,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 9,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 9,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 9,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 9,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
-  {
-    id: 9,
-    tem: 5.6,
-    pg: "N",
-    initialPayment: 333333,
-    interest: 323.33,
-    rateType: "nominal",
-    amortization: "2 años",
-    finalBalance: 311.98,
-  },
+const config = useRuntimeConfig();
+
+const periods = ref([
+  { value: "annually", name: "Anual" },
+  { value: "semester", name: "Semestral" },
+  { value: "quatrimesterly", name: "Cuatrimestral" },
+  { value: "quarterly", name: "Trimestral" },
+  { value: "bimonthly", name: "Bimestral" },
+  { value: "monthly", name: "Mensual" },
+  { value: "biweekly", name: "Quincenal" },
+  { value: "daily", name: "Diario" },
 ]);
+
+const gracePeriodTypes = ref([
+  { value: "TOTAL", name: "Total" },
+  { value: "PARCIAL", name: "Parcial" },
+  { value: "NONE", name: "Ninguno" },
+]);
+
+interface Rate {
+  id: number;
+  rate_type: string;
+  rate_period: string;
+  rate_value: string;
+  capitalization_period: string | null;
+}
+
+interface GracePeriod {
+  id: number;
+  type: string;
+  period_numbers: number[];
+}
+
+interface InputData {
+  id: number;
+  currency: string;
+  vehicle_cost: string;
+  initial_payment_percentage: string;
+  financing_percentage: string;
+  payment_frequency: string;
+  amount_of_fees: number;
+  cok_percentage: string;
+  rate: Rate;
+  gracePeriod: GracePeriod;
+}
+
+interface PaymentInstallment {
+  payment_number: number;
+  initial_balance: string;
+  interest_amount: string;
+  payment_amount: string;
+  amortization: string;
+  installment: string;
+  outstanding_balance: string;
+  id: number;
+}
+
+interface ProfitabilityIndicator {
+  id: number;
+  discount_rate: string;
+  internal_rate_of_return: string;
+  annual_effective_cost_rate: string;
+  net_present_value: string;
+}
+
+interface FinancingResult {
+  id: number;
+  final_fee: string;
+  number_of_years: number;
+  annual_effective_rate: string;
+  effective_rate_by_payment_frequency: string;
+  rates_per_year: number;
+  initial_fee_ammount: string;
+  final_fee_ammount: string;
+  lease_amount: string;
+  financed_balance_with_installment: string;
+}
+
+interface ApiResponse {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  inputData: InputData;
+  paymentInstallments: PaymentInstallment[];
+  profitabilityIndicator: ProfitabilityIndicator;
+  financingResult: FinancingResult;
+}
+
+const payments = ref([
+  // {
+  //   id: 1,
+  //   tem: 5.6,
+  //   pg: "N",
+  //   initialPayment: 333333,
+  //   interest: 323.33,
+  //   rateType: "nominal",
+  //   amortization: "2 años",
+  //   finalBalance: 311.98,
+  // },
+  // {
+  //   id: 2,
+  //   tem: 5.6,
+  //   pg: "N",
+  //   initialPayment: 333333,
+  //   interest: 323.33,
+  //   rateType: "nominal",
+  //   amortization: "2 años",
+  //   finalBalance: 311.98,
+  // },
+]);
+
+const response = ref<ApiResponse>();
+
+const fetchDetails = async () => {
+  try {
+    // Make the API call using $fetch
+    const apiResponse: ApiResponse = await $fetch(
+      config.public.baseUrl + "/api/v1/session/detail/" + route.params.id,
+      {
+        headers: {
+          accept: "application/json",
+        },
+      },
+    );
+
+    response.value = apiResponse;
+    console.log(response.value);
+  } catch (error) {
+    console.error("Error fetching operations:", error);
+  }
+};
+
+// Fetch operations when the component is mounted
+onMounted(fetchDetails);
+
+const formatDate = (value: string) => {
+  const date = new Date(value);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
 
 const exportCSV = () => {
   // Convert data to CSV format using PapaParse
