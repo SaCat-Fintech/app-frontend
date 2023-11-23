@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <div class="h-screen">
     <nav>
       <Navbar />
@@ -101,12 +102,21 @@
 </template>
 
 <script setup lang="ts">
+import { useToast } from "primevue/usetoast";
+import { useRouter } from "vue-router";
+
+const toast = useToast();
+const router = useRouter();
+
+const config = useRuntimeConfig();
+
 const name = ref("");
 const email = ref("");
 const phone = ref("");
 const terms = ref(false);
 const text = ref("");
 const textWordCount = ref(0);
+const toastLifetime = 3500;
 
 const nameInvalid = ref(false);
 const emailInvalid = ref(false);
@@ -138,15 +148,15 @@ watchEffect(() => {
   validateText();
 });
 
-const onSubmit = () => {
+const onSubmit = async () => {
   // If terms are not accepted
   if (!terms.value) {
     return;
   }
   if (
-    !name.value ||
-    name.value.split(" ").length < 2 ||
-    name.value.length < 4
+      !name.value ||
+      name.value.split(" ").length < 2 ||
+      name.value.length < 4
   ) {
     nameInvalid.value = true;
     return;
@@ -172,13 +182,35 @@ const onSubmit = () => {
   }
 
   if (
-    nameInvalid.value ||
-    emailInvalid.value /* add other conditions as needed */
+      nameInvalid.value ||
+      emailInvalid.value /* add other conditions as needed */
   ) {
+
     return;
   }
 
-  // TODO: Submission logic
+  try {
+    const response = await $fetch(
+        config.public.baseUrl + "/api/v1/support-inquiries",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.value,
+            full_name: name.value,
+            phone_number: phone.value,
+            subject: text.value
+          }),
+        },
+    );
+    // TODO: Show success dialog
+    showSuccessDialog();
+  } catch (error: any) {
+    console.log(error);
+  }
+
   console.log("Form submitted:", {
     name: name.value,
     email: email.value,
@@ -187,6 +219,21 @@ const onSubmit = () => {
     text: text.value,
   });
 };
+const showSuccessDialog = () => {
+  toast.add({
+    severity: "success",
+    summary: "¡Gracias!",
+    detail: "Su mensaje ha sido enviado con éxito.",
+    life: toastLifetime,
+  });
+  setTimeout(() => {
+    name.value = "";
+    email.value = "";
+    phone.value = "";
+    terms.value = false;
+    text.value = "";
+  }, toastLifetime);
+}
 </script>
 
 <style>
