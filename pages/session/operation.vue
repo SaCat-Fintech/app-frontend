@@ -22,7 +22,7 @@
               <RadioButton
                 v-model="formData.currency"
                 inputId="currency1"
-                value="soles"
+                value="PEN"
               />
               <label for="currency1" class="ml-2">Soles</label>
             </div>
@@ -30,7 +30,7 @@
               <RadioButton
                 v-model="formData.currency"
                 inputId="currency2"
-                value="dollars"
+                value="USD"
               />
               <label for="currency2" class="ml-2">Dólares</label>
             </div>
@@ -115,7 +115,7 @@
               <RadioButton
                 v-model="formData.rateType"
                 inputId="rate1"
-                value="effective"
+                value="EFFECTIVE"
               />
               <label for="rate1" class="ml-2">Efectiva</label>
             </div>
@@ -123,7 +123,7 @@
               <RadioButton
                 v-model="formData.rateType"
                 inputId="rate2"
-                value="nominal"
+                value="NOMINAL"
               />
               <label for="rate2" class="ml-2">Nominal</label>
             </div>
@@ -489,11 +489,11 @@ const router = useRouter();
 const config = useRuntimeConfig();
 
 const formData = ref({
-  currency: "soles",
+  currency: "PEN",
   vehicleCost: null,
   initialPaymentPercentage: null,
   financingPercentage: null,
-  rateType: "effective",
+  rateType: "EFFECTIVE",
   rateValue: null,
   capitalization: null,
   ratePeriod: null,
@@ -539,7 +539,10 @@ const capitalizations = ref([
   { value: "daily", name: "Diario" },
 ]);
 
-const feesAmounts = ref([{ name: "24" }, { name: "36" }]);
+const feesAmounts = ref([
+  { name: "24", value: 24 },
+  { name: "36", value: 36 },
+]);
 
 const gracePeriodTypes = ref([
   { value: "TOTAL", name: "Total" },
@@ -553,7 +556,7 @@ const gracePeriodNumbers = ref([
   { name: "3", value: 3 },
 ]);
 
-const isNominalRate = computed(() => formData.value.rateType === "nominal");
+const isNominalRate = computed(() => formData.value.rateType === "NOMINAL");
 
 const getMaxFeeValue = computed(() => {
   if (formData.value.feesAmount !== null) {
@@ -616,7 +619,7 @@ const formatCost = (value: any) => {
 
 const handleRateTypeChange = () => {
   if (formData.value.rateType) {
-    if (formData.value.rateType === "effective") {
+    if (formData.value.rateType === "EFFECTIVE") {
       formData.value.capitalization = null;
     }
   } else {
@@ -670,8 +673,8 @@ const validateForm = () => {
     }
   }
 
-  // if rateType is "effective", capitalization is valid
-  if (formData.value.rateType === "effective") {
+  // if rateType is "EFFECTIVE", capitalization is valid
+  if (formData.value.rateType === "EFFECTIVE") {
     formDataValid.value.capitalization = true;
   }
 
@@ -744,7 +747,26 @@ const onSubmitForm = async () => {
 
   if (validateForm()) {
     console.log("Form is valid. Submitting...");
-    console.log(formData.value);
+
+    // Data formatted for body
+    let _capitalization = "null";
+    if (formData.value.rateType === "NOMINAL") {
+      _capitalization = formData.value.capitalization;
+    }
+
+    let _periodNumbers = [];
+    if (formData.value.gracePeriodType.value !== "NONE") {
+      _periodNumbers = [..._periodNumbers, formData.value.firstFee];
+
+      if (formData.value.secondFee) {
+        _periodNumbers = [..._periodNumbers, formData.value.secondFee];
+      }
+
+      if (formData.value.thirdFee) {
+        _periodNumbers = [..._periodNumbers, formData.value.thirdFee];
+      }
+    }
+
     try {
       // Send data to endpoint for operation
       const response: any = await $fetch(
@@ -755,22 +777,23 @@ const onSubmitForm = async () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            currency: "USD",
-            vehicle_cost: 100000,
-            initial_payment_percentage: 0.2,
-            financing_percentage: 0.4,
+            currency: formData.value.currency,
+            vehicle_cost: formData.value.vehicleCost,
+            initial_payment_percentage:
+              formData.value.initialPaymentPercentage / 100,
+            financing_percentage: formData.value.financingPercentage / 100,
             rate: {
-              rate_type: "EFFECTIVE",
-              rate_period: "annually",
-              rate_value: 0.1,
-              capitalization_period: "null",
+              rate_type: formData.value.rateType,
+              rate_period: formData.value.ratePeriod.value,
+              rate_value: formData.value.rateValue / 100,
+              capitalization_period: _capitalization,
             },
-            payment_frequency: "monthly",
-            amount_of_fees: 36,
-            cok_percentage: 0.5,
+            payment_frequency: formData.value.paymentFrequency.value,
+            amount_of_fees: formData.value.feesAmount.value,
+            cok_percentage: formData.value.cok / 100,
             gracePeriod: {
-              type: "NONE",
-              period_numbers: [],
+              type: formData.value.gracePeriodType.value,
+              period_numbers: _periodNumbers,
             },
           }),
         },
