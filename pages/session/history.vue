@@ -61,7 +61,7 @@
           >
             <template #body="slotProps">
               {{
-                slotProps.data.vehicle_cost
+                Number(slotProps.data.vehicle_cost)
                   .toFixed(2)
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }}
@@ -75,7 +75,7 @@
             }"
           >
             <template #body="slotProps">
-              {{ slotProps.data.currency === "dollar" ? "Dólar" : "Sol" }}
+              {{ slotProps.data.currency === "USD" ? "Dólar" : "Sol" }}
             </template>
           </Column>
           <Column
@@ -98,22 +98,19 @@
           >
             <template #body="slotProps">
               {{
-                slotProps.data.rate_type === "nominal" ? "Nominal" : "Efectiva"
+                slotProps.data.rate_type === "NOMINAL" ? "Nominal" : "Efectiva"
               }}
             </template>
           </Column>
           <Column
-            field="rate_period"
+            field="payment_years"
             header="Tiempo"
             :headerStyle="{
               'background-color': 'var(--light-700)',
             }"
           >
             <template #body="slotProps">
-              {{
-                periods.find((cap) => cap.value === slotProps.data.rate_period)
-                  ?.name
-              }}
+              {{ slotProps.data.payment_years }} años
             </template>
           </Column>
           <Column
@@ -158,16 +155,18 @@
 <script setup lang="ts">
 import Papa from "papaparse";
 
-const periods = [
-  { value: "anual", name: "Anual" },
-  { value: "semestral", name: "Semestral" },
-  { value: "cuatrimestral", name: "Cuatrimestral" },
-  { value: "trimestral", name: "Trimestral" },
-  { value: "bimestral", name: "Bimestral" },
-  { value: "mensual", name: "Mensual" },
-  { value: "quincenal", name: "Quincenal" },
+const config = useRuntimeConfig();
+
+const periods = ref([
+  { value: "annually", name: "Anual" },
+  { value: "semester", name: "Semestral" },
+  { value: "quatrimesterly", name: "Cuatrimestral" },
+  { value: "quarterly", name: "Trimestral" },
+  { value: "bimonthly", name: "Bimestral" },
+  { value: "monthly", name: "Mensual" },
+  { value: "biweekly", name: "Quincenal" },
   { value: "daily", name: "Diario" },
-];
+]);
 
 const formatDate = (value: string) => {
   const date = new Date(value);
@@ -179,147 +178,173 @@ const formatDate = (value: string) => {
 };
 
 const operations = ref([
-  {
-    id: "1",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 60090.294,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "2",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 5000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "3",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 8000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "4",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "5",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "6",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "7",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "8",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "9",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "10",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "11",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "12",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "13",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
-  {
-    id: "14",
-    created_at: "1999-01-08 04:05:06",
-    vehicle_cost: 9000.0,
-    currency: "dollar",
-    rate_value: 5.6,
-    rate_type: "nominal",
-    rate_period: "anual",
-    payment_frequency: "mensual",
-  },
+  // {
+  //   id: "1",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 60090.294,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "2",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 5000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "3",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 8000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "4",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "5",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "6",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "7",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "8",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "9",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "10",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "11",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "12",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "13",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
+  // {
+  //   id: "14",
+  //   created_at: "1999-01-08 04:05:06",
+  //   vehicle_cost: 9000.0,
+  //   currency: "USD",
+  //   rate_value: 5.6,
+  //   rate_type: "nominal",
+  //   rate_period: "anual",
+  //   payment_frequency: "mensual",
+  // },
 ]);
+
+const fetchOperations = async () => {
+  try {
+    // Make the API call using $fetch
+    const response: any = await $fetch(
+      config.public.baseUrl +
+        "/api/v1/session/history/" +
+        localStorage.getItem("user_profile_id"),
+      {
+        headers: {
+          accept: "application/json",
+        },
+      },
+    );
+
+    // Assuming the API response is an array of operations
+    operations.value = response;
+
+    console.log(operations.value);
+  } catch (error) {
+    console.error("Error fetching operations:", error);
+  }
+};
+
+// Fetch operations when the component is mounted
+onMounted(fetchOperations);
 
 const exportCSV = () => {
   // Convert data to CSV format using PapaParse

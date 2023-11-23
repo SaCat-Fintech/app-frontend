@@ -533,7 +533,7 @@ const capitalizations = ref([
   { value: "semester", name: "Semestral" },
   { value: "quatrimesterly", name: "Cuatrimestral" },
   { value: "quarterly", name: "Trimestral" },
-  { value: "bimonthy", name: "Bimestral" },
+  { value: "bimonthly", name: "Bimestral" },
   { value: "monthly", name: "Mensual" },
   { value: "biweekly", name: "Quincenal" },
   { value: "daily", name: "Diario" },
@@ -751,7 +751,7 @@ const onSubmitForm = async () => {
     // Data formatted for body
     let _capitalization = "null";
     if (formData.value.rateType === "NOMINAL") {
-      _capitalization = formData.value.capitalization;
+      _capitalization = formData.value.capitalization.value;
     }
 
     let _periodNumbers = [];
@@ -770,7 +770,9 @@ const onSubmitForm = async () => {
     try {
       // Send data to endpoint for operation
       const response: any = await $fetch(
-        config.public.baseUrl + "/api/v1/session/operation/1",
+        config.public.baseUrl +
+          "/api/v1/session/operation/" +
+          localStorage.getItem("user_profile_id"),
         {
           method: "POST",
           headers: {
