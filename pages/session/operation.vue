@@ -481,8 +481,12 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from "vue";
 import { useToast } from "primevue/usetoast";
+import { useRouter } from "vue-router";
 
 const toast = useToast();
+const router = useRouter();
+
+const config = useRuntimeConfig();
 
 const formData = ref({
   currency: "soles",
@@ -701,9 +705,11 @@ const validateForm = () => {
 
   // FirstFee, SecondFee, ThirdFee have to be different
   if (
-    formData.value.firstFee === formData.value.secondFee ||
-    formData.value.firstFee === formData.value.thirdFee ||
-    formData.value.secondFee === formData.value.thirdFee
+    (formData.value.firstFee !== null &&
+      (formData.value.firstFee === formData.value.secondFee ||
+        formData.value.firstFee === formData.value.thirdFee)) ||
+    (formData.value.secondFee !== null &&
+      formData.value.secondFee === formData.value.thirdFee)
   ) {
     formDataValid.value.firstFee = false;
     formDataValid.value.secondFee = false;
@@ -739,7 +745,45 @@ const onSubmitForm = async () => {
   if (validateForm()) {
     console.log("Form is valid. Submitting...");
     console.log(formData.value);
-    // Add your form submission logic here
+    try {
+      // Send data to endpoint for operation
+      const response: any = await $fetch(
+        config.public.baseUrl + "/api/v1/session/operation/1",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currency: "USD",
+            vehicle_cost: 100000,
+            initial_payment_percentage: 0.2,
+            financing_percentage: 0.4,
+            rate: {
+              rate_type: "EFFECTIVE",
+              rate_period: "annually",
+              rate_value: 0.1,
+              capitalization_period: "null",
+            },
+            payment_frequency: "monthly",
+            amount_of_fees: 36,
+            cok_percentage: 0.5,
+            gracePeriod: {
+              type: "NONE",
+              period_numbers: [],
+            },
+          }),
+        },
+      );
+
+      // Retrieve the id obtained from the operation
+      const operation_id = response.id;
+
+      // Go to site where operation details are
+      router.push("/session/details/" + operation_id);
+    } catch (error: any) {
+      console.log("Error:", error);
+    }
   } else {
     console.log("Form is invalid.");
   }
