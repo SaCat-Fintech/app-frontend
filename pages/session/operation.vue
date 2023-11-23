@@ -5,7 +5,16 @@
     </nav>
     <div class="grid grid-cols-1 lg:grid-cols-3 px-4 sm:px-20 lg:px-32 mt-16">
       <div class="lg:pl-10" id="col-1">
-        <div>1. Seleccionar moneda:</div>
+        <div>
+          1. Seleccionar moneda:
+          <i
+            class="pi pi-info-circle p-1"
+            v-tooltip.right="
+              'Elija la moneda que se va a usar en toda la corrida.'
+            "
+            style="font-size: 1rem; color: var(--primary-color)"
+          ></i>
+        </div>
         <div class="flex flex-wrap gap-x-6 mt-4 ml-4">
           <div class="flex align-items-center">
             <RadioButton v-model="currency" inputId="currency1" value="soles" />
@@ -21,7 +30,16 @@
           </div>
         </div>
         <div class="flex flex-col">
-          <div class="mt-6">2. Valor del vehículo:</div>
+          <div class="mt-6">
+            2. Valor del vehículo:
+            <i
+              class="pi pi-info-circle p-1"
+              v-tooltip.right="
+                'Ingrese el valor total del vehículo a financiar.'
+              "
+              style="font-size: 1rem; color: var(--primary-color)"
+            ></i>
+          </div>
           <InputNumber
             placeholder="ej. 60,000"
             id="number-input"
@@ -31,7 +49,16 @@
           />
         </div>
         <div class="flex flex-col">
-          <div class="mt-6">3. Porcentaje de cuota inicial:</div>
+          <div class="mt-6">
+            3. Porcentaje de cuota inicial:
+            <i
+              class="pi pi-info-circle p-1"
+              v-tooltip.right="
+                'Porcentaje del total del valor del vehículo que debe pagar al inicio del proceso para obtener el financiamiento. Este valor debe estar entre 15 y 35.'
+              "
+              style="font-size: 1rem; color: var(--primary-color)"
+            ></i>
+          </div>
           <InputNumber
             placeholder="ej. 15 - 35"
             id="percentage-input"
@@ -46,7 +73,16 @@
           >
         </div>
         <div class="flex flex-col">
-          <div class="mt-6">4. Porcentaje de financiación:</div>
+          <div class="mt-6">
+            4. Porcentaje de financiación:
+            <i
+              class="pi pi-info-circle p-1"
+              v-tooltip.right="
+                'Porcentaje del valor total del vehículo que se financia a través del préstamo. Este valor debe estar entre 30 y 40.'
+              "
+              style="font-size: 1rem; color: var(--primary-color)"
+            ></i>
+          </div>
           <InputNumber
             placeholder="ej. 30 - 40"
             id="number-input"
@@ -57,7 +93,17 @@
             class="h-10 mt-4 ml-4 w-20"
           />
         </div>
-        <div class="mt-6">5. Seleccionar tipo de tasa:</div>
+        <div class="mt-6">
+          5. Seleccionar tipo de tasa:
+
+          <i
+            class="pi pi-info-circle p-1"
+            v-tooltip.right="
+              'Si se selecciona nominal, significa que los intereses se calculan sobre el capital original, mientras que en efectiva, los intereses se calculan sobre el capital más los intereses acumulados. En caso elija Nominal, tendrá que escoger la capitalización en el siguiente paso.'
+            "
+            style="font-size: 1rem; color: var(--primary-color)"
+          ></i>
+        </div>
         <div class="flex flex-wrap gap-x-6 mt-4 ml-4">
           <div class="flex align-items-center" @change="handleRateTypeChange">
             <RadioButton v-model="rateType" inputId="rate1" value="effective" />
@@ -70,6 +116,14 @@
         </div>
         <div class="mt-6" :style="{ opacity: !isNominalRate ? '0.3' : '1' }">
           6. Seleccionar capitalización:
+
+          <i
+            class="pi pi-info-circle p-1"
+            v-tooltip.right="
+              'Indica cómo se calculará el interés sobre el préstamo: mensual, trimestral, anual, etc.'
+            "
+            style="font-size: 1rem; color: var(--primary-color)"
+          ></i>
         </div>
         <div class="card flex justify-content-center">
           <Dropdown
@@ -83,7 +137,16 @@
         </div>
       </div>
       <div class="lg:pl-10" id="col-2">
-        <div>7. Seleccionar tiempo de la tasa:</div>
+        <div>
+          7. Seleccionar tiempo de la tasa:
+          <i
+            class="pi pi-info-circle p-1"
+            v-tooltip.right="
+              'Es el periodo para el cual se establece la tasa de interés, por ejemplo, anual, mensual, trimestral, etc.'
+            "
+            style="font-size: 1rem; color: var(--primary-color)"
+          ></i>
+        </div>
         <div class="card flex justify-content-center">
           <Dropdown
             v-model="ratePeriod"
@@ -94,7 +157,16 @@
           />
         </div>
         <div class="flex flex-col">
-          <div class="mt-6">8. Ingrese el valor de la tasa:</div>
+          <div class="mt-6">
+            8. Ingrese el valor de la tasa:
+            <i
+              class="pi pi-info-circle p-1"
+              v-tooltip.right="
+                'Porcentaje que se aplica al capital prestado para calcular los intereses. Este valor debe estar entre 1 a 99.'
+              "
+              style="font-size: 1rem; color: var(--primary-color)"
+            ></i>
+          </div>
           <InputNumber
             placeholder="ej. 1 - 99"
             id="number-input"
@@ -105,7 +177,16 @@
             class="h-10 mt-4 ml-4 w-20"
           />
         </div>
-        <div class="mt-6">9. Seleccione frecuencia de pago:</div>
+        <div class="mt-6">
+          9. Seleccione frecuencia de pago:
+          <i
+            class="pi pi-info-circle p-1"
+            v-tooltip.right="
+              'Es la frecuencia con la que realizará las cuotas del préstamo. Puede ser mensual, trimestral, semestral, etc.'
+            "
+            style="font-size: 1rem; color: var(--primary-color)"
+          ></i>
+        </div>
         <div class="card flex justify-content-center">
           <Dropdown
             v-model="paymentFrequency"
@@ -115,7 +196,16 @@
             class="h-10 mt-4 ml-4"
           />
         </div>
-        <div class="mt-6">10. Cantidad de cuotas:</div>
+        <div class="mt-6">
+          10. Cantidad de cuotas:
+          <i
+            class="pi pi-info-circle p-1"
+            v-tooltip.right="
+              'Número total de pagos que se deben realizar para saldar el préstamo. Puede escoger entre 24 y 36 cuotas.'
+            "
+            style="font-size: 1rem; color: var(--primary-color)"
+          ></i>
+        </div>
         <div class="card flex justify-content-center">
           <Dropdown
             v-model="feesAmount"
@@ -127,7 +217,16 @@
           />
         </div>
         <div class="flex flex-col">
-          <div class="mt-6">11. Ingresar el valor COK:</div>
+          <div class="mt-6">
+            11. Ingresar el valor COK:
+            <i
+              class="pi pi-info-circle p-1"
+              v-tooltip.right="
+                'El costo de oportunidad del capital refleja la tasa de rendimiento que podría obtenerse al invertir el dinero en otra alternativa.'
+              "
+              style="font-size: 1rem; color: var(--primary-color)"
+            ></i>
+          </div>
           <InputNumber
             placeholder="ej. 1 - 99"
             id="number-input"
@@ -137,7 +236,16 @@
             class="h-10 mt-4 ml-4 w-20"
           />
         </div>
-        <div class="mt-6">12. Seleccionar plazo de gracia:</div>
+        <div class="mt-6">
+          12. Seleccionar plazo de gracia:
+          <i
+            class="pi pi-info-circle p-1"
+            v-tooltip.right="
+              'Ninguna: No se otorga ningún periodo de gracia para comenzar a realizar los pagos. Total: Se permite un periodo completo sin realizar pagos. Parcial: Se permite un periodo en el que se pagan los intereses, pero se mantiene la obligación de pago del capital.'
+            "
+            style="font-size: 1rem; color: var(--primary-color)"
+          ></i>
+        </div>
         <div class="card flex justify-content-center">
           <Dropdown
             v-model="gracePeriodType"
@@ -160,8 +268,12 @@
                 : '1',
           }"
         >
-          <!-- Fix grace period disable selection -->
           13. Número de periodos de gracia:
+          <i
+            class="pi pi-info-circle p-1"
+            v-tooltip.right="'Se permiten como máximo 3 periodos de gracia.'"
+            style="font-size: 1rem; color: var(--primary-color)"
+          ></i>
         </div>
         <div class="card flex justify-content-center">
           <Dropdown
@@ -190,6 +302,13 @@
           }"
         >
           14. Número de la cuota:
+          <i
+            class="pi pi-info-circle p-1"
+            v-tooltip.right="
+              'Especifica a qué cuota se aplicará el periodo de gracia seleccionado. Puede escoger cualquier cuota menos la última.'
+            "
+            style="font-size: 1rem; color: var(--primary-color)"
+          ></i>
         </div>
         <div class="grid grid-rows-3">
           <div class="period-div grid grid-cols-2 mt-2">

@@ -18,23 +18,25 @@
         </p>
         <div class="grid grid-cols-2 sm:grid-cols-4 text-left w-[54rem]">
           <div
-            class="grid grid-rows-8 font-semibold"
+            class="grid grid-rows-9 font-semibold"
             style="background-color: var(--light-700)"
           >
             <div class="p-2 border border-black">Tipo de Moneda:</div>
             <div class="p-2 border border-black">Cuota Inicial:</div>
             <div class="p-2 border border-black">Primera Tasa:</div>
+            <div class="p-2 border border-black">Capitalización:</div>
             <div class="p-2 border border-black">Frecuencia de Pago:</div>
             <div class="p-2 border border-black">Número de Pagos:</div>
             <div class="p-2 border border-black">Plazo de Gracia:</div>
             <div class="p-2 border border-black">COK:</div>
             <div class="p-2 border border-black">TIR:</div>
           </div>
-          <div class="grid grid-rows-8">
+          <div class="grid grid-rows-9">
             <div class="p-2 border border-black">Dolares</div>
             <div class="p-2 border border-black">40,000</div>
             <div class="p-2 border border-black">12.5% TNA</div>
             <div class="p-2 border border-black">Semestral</div>
+            <div class="p-2 border border-black">16</div>
             <div class="p-2 border border-black">16</div>
             <div class="p-2 border border-black">Total</div>
             <div class="p-2 border border-black">20.00000%</div>
@@ -44,12 +46,13 @@
             class="grid grid-rows-8 font-semibold"
             style="background-color: var(--light-700)"
           >
-            <div class="p-2 border border-black">Precio de Inmueble:</div>
+            <div class="p-2 border border-black">Precio del vehículo:</div>
             <div class="p-2 border border-black">Precio a financiar:</div>
             <div class="p-2 border border-black">Tasa a convertir:</div>
-            <div class="p-2 border border-black">Frecuencia de Pagos:</div>
-            <div class="p-2 border border-black">Numero de Años:</div>
-            <div class="p-2 border border-black">Periodo de Gracia:</div>
+            <div class="p-2 border border-black">Amortización:</div>
+            <div class="p-2 border border-black">Número de años:</div>
+            <div class="p-2 border border-black">Tipo de periodo:</div>
+            <div class="p-2 border border-black">Periodo(s) de gracia:</div>
             <div class="p-2 border border-black">VAN:</div>
             <div class="p-2 border border-black">Fecha de guardado:</div>
           </div>
@@ -58,6 +61,7 @@
             <div class="p-2 border border-black">160,000</div>
             <div class="p-2 border border-black">6.3424% TES</div>
             <div class="p-2 border border-black">Semestral</div>
+            <div class="p-2 border border-black">8</div>
             <div class="p-2 border border-black">8</div>
             <div class="p-2 border border-black">10</div>
             <div class="p-2 border border-black">US$ -884,398.34</div>

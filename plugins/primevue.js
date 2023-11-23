@@ -19,8 +19,8 @@ import ColumnGroup from "primevue/columngroup";
 import Row from "primevue/row";
 import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
-
 import Menu from "primevue/menu";
+import Tooltip from "primevue/tooltip";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -44,5 +44,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("AccordionTab", AccordionTab);
   nuxtApp.vueApp.use(ToastService);
   nuxtApp.vueApp.component("Menu", Menu);
+  nuxtApp.vueApp.directive("tooltip", Tooltip);
   //other components that you need
 });
