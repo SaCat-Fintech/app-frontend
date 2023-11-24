@@ -546,7 +546,7 @@ const feesAmounts = ref([
 
 const gracePeriodTypes = ref([
   { value: "TOTAL", name: "Total" },
-  { value: "PARCIAL", name: "Parcial" },
+  { value: "PARTIAL", name: "Parcial" },
   { value: "NONE", name: "Ninguno" },
 ]);
 

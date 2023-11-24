@@ -86,7 +86,7 @@
             }"
           >
             <template #body="slotProps">
-              {{ slotProps.data.rate_value }}%
+              {{ Number(slotProps.data.rate_value) * 100 }}%
             </template>
           </Column>
           <Column

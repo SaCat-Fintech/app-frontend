@@ -151,7 +151,9 @@
               {{
                 response?.inputData.currency +
                 " " +
-                response?.profitabilityIndicator.net_present_value
+                Number(response?.profitabilityIndicator.net_present_value)
+                  .toFixed(2)
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }}
             </div>
             <div class="p-2 border border-black">
@@ -318,7 +320,7 @@ const periods = ref([
 
 const gracePeriodTypes = ref([
   { value: "TOTAL", name: "Total" },
-  { value: "PARCIAL", name: "Parcial" },
+  { value: "PARTIAL", name: "Parcial" },
   { value: "NONE", name: "Ninguno" },
 ]);
 
@@ -432,6 +434,9 @@ const fetchDetails = async () => {
 
     // Better separate this so it's not so big
     payments.value = response.value.paymentInstallments;
+    console.log(response.value);
+
+    payments.value.sort((a, b) => a.payment_number - b.payment_number);
   } catch (error) {
     console.error("Error fetching operations:", error);
   }
